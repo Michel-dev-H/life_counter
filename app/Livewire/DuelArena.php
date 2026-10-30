@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Enums\DuelPhase;
 use App\Models\Duel;
 use App\Models\DuelPlayer;
 use Illuminate\Contracts\View\View;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -57,6 +59,34 @@ class DuelArena extends Component
         $this->rotateOpponent = ! $this->rotateOpponent;
     }
 
+    public function setPhase(string $phase): void
+    {
+        $phase = DuelPhase::tryFrom($phase);
+
+        if ($phase === null) {
+            throw ValidationException::withMessages(['phase' => 'Fase desconhecida.']);
+        }
+
+        $this->duel->setPhase($phase);
+    }
+
+    public function advanceTurn(): void
+    {
+        $this->duel->advanceTurn();
+    }
+
+    public function toggleTimer(): void
+    {
+        $this->duel->isTimerRunning()
+            ? $this->duel->pauseTimer()
+            : $this->duel->startTimer();
+    }
+
+    public function resetTimer(): void
+    {
+        $this->duel->resetTimer();
+    }
+
     public function render(): View
     {
         $players = $this->duel->duelPlayers()
@@ -66,6 +96,11 @@ class DuelArena extends Component
 
         return view('livewire.duel-arena', [
             'players' => $players,
+            'phases' => DuelPhase::cases(),
+            'currentPhase' => $this->duel->phase,
+            'turnOwner' => $this->duel->turnOwnerLabel(),
+            'timerRemaining' => $this->duel->timerRemainingSeconds(),
+            'timerRunning' => $this->duel->isTimerRunning(),
             'lastEvent' => $this->duel->lifePointEvents()
                 ->with('duelPlayer')
                 ->whereNull('undone_at')
