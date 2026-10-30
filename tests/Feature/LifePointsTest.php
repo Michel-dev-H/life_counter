@@ -105,11 +105,11 @@ it('rejects a non positive amount', function () {
         ->toThrow(InvalidArgumentException::class);
 });
 
-it('undoes the last change', function () {
+it('undoes the last change of the duel', function () {
     $player = duelPlayerWith(8000);
     $player->subtractLifePoints(1500);
 
-    expect($player->undoLifePointChange())->toBeTrue()
+    expect($player->duel->undoLastLifePointChange())->toBeTrue()
         ->and($player->fresh()->life_points)->toBe(8000)
         ->and($player->lifePointEvents()->sole()->undone_at)->not->toBeNull();
 });
@@ -119,40 +119,93 @@ it('undoes several changes in order', function () {
     $player->subtractLifePoints(1000);
     $player->subtractLifePoints(500);
 
-    $player->undoLifePointChange();
+    $player->duel->undoLastLifePointChange();
     expect($player->fresh()->life_points)->toBe(7000);
 
-    $player->undoLifePointChange();
+    $player->duel->undoLastLifePointChange();
     expect($player->fresh()->life_points)->toBe(8000);
 });
 
 it('redoes an undone change', function () {
     $player = duelPlayerWith(8000);
     $player->subtractLifePoints(1500);
-    $player->undoLifePointChange();
+    $player->duel->undoLastLifePointChange();
 
-    expect($player->redoLifePointChange())->toBeTrue()
+    expect($player->duel->redoLastLifePointChange())->toBeTrue()
         ->and($player->fresh()->life_points)->toBe(6500)
         ->and($player->lifePointEvents()->sole()->undone_at)->toBeNull();
+});
+
+it('redoes several undone changes in order', function () {
+    $player = duelPlayerWith(8000);
+    $player->subtractLifePoints(1000);
+    $player->subtractLifePoints(500);
+
+    $player->duel->undoLastLifePointChange();
+    $player->duel->undoLastLifePointChange();
+
+    $player->duel->redoLastLifePointChange();
+    expect($player->fresh()->life_points)->toBe(7000);
+
+    $player->duel->redoLastLifePointChange();
+    expect($player->fresh()->life_points)->toBe(6500);
 });
 
 it('reports nothing to undo or redo', function () {
     $player = duelPlayerWith(8000);
 
-    expect($player->undoLifePointChange())->toBeFalse()
-        ->and($player->redoLifePointChange())->toBeFalse();
+    expect($player->duel->undoLastLifePointChange())->toBeFalse()
+        ->and($player->duel->redoLastLifePointChange())->toBeFalse();
 });
 
 it('discards the redo history when a new change happens', function () {
     $player = duelPlayerWith(8000);
     $player->subtractLifePoints(1500);
-    $player->undoLifePointChange();
+    $player->duel->undoLastLifePointChange();
 
     $player->subtractLifePoints(200);
 
     expect($player->lifePointEvents()->count())->toBe(1)
-        ->and($player->redoLifePointChange())->toBeFalse()
+        ->and($player->duel->redoLastLifePointChange())->toBeFalse()
         ->and($player->fresh()->life_points)->toBe(7800);
+});
+
+it('undoes changes of different players in reverse order', function () {
+    $first = duelPlayerWith(8000);
+    $second = DuelPlayer::factory()->create([
+        'duel_id' => $first->duel_id,
+        'seat' => 1,
+        'starting_life_points' => 8000,
+        'life_points' => 8000,
+    ]);
+
+    $first->subtractLifePoints(1000);
+    $second->subtractLifePoints(500);
+
+    $first->duel->undoLastLifePointChange();
+    expect($second->fresh()->life_points)->toBe(8000)
+        ->and($first->fresh()->life_points)->toBe(7000);
+
+    $first->duel->undoLastLifePointChange();
+    expect($first->fresh()->life_points)->toBe(8000);
+});
+
+it('discards the redo history of the whole duel when a new change happens', function () {
+    $first = duelPlayerWith(8000);
+    $second = DuelPlayer::factory()->create([
+        'duel_id' => $first->duel_id,
+        'seat' => 1,
+        'starting_life_points' => 8000,
+        'life_points' => 8000,
+    ]);
+
+    $first->subtractLifePoints(1000);
+    $first->duel->undoLastLifePointChange();
+
+    $second->subtractLifePoints(500);
+
+    expect($first->duel->redoLastLifePointChange())->toBeFalse()
+        ->and($first->fresh()->life_points)->toBe(8000);
 });
 
 it('keeps players isolated from each other', function () {

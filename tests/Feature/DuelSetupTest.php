@@ -52,3 +52,8 @@ it('uses the custom starting life points', function () {
     expect($duel->duelPlayers->first()->life_points)->toBe(4000)
         ->and($duel->duelPlayers->first()->starting_life_points)->toBe(4000);
 });
+
+it('rejects starting life points outside the supported range', function (int $lifePoints) {
+    expect(fn () => Duel::startWith([['name' => 'Ana']], $lifePoints))
+        ->toThrow(InvalidArgumentException::class);
+})->with([0, -500, 1000000]);

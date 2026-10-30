@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -52,75 +53,82 @@ class DuelPlayer extends Model
         return $this->hasMany(LifePointEvent::class);
     }
 
+    public function latestLifePointEvent(): HasOne
+    {
+        return $this->hasOne(LifePointEvent::class)->latestOfMany();
+    }
+
+    public function isYou(): bool
+    {
+        return $this->seat === 0;
+    }
+
+    public function isOpponent(): bool
+    {
+        return $this->seat === 1;
+    }
+
+    public function seatLabel(): string
+    {
+        return 'P'.($this->seat + 1).' · '.match (true) {
+            $this->isYou() => 'VOCÊ',
+            $this->isOpponent() => 'RIVAL',
+            default => 'ADVERSÁRIO',
+        };
+    }
+
+    public function remainingPercentage(): int
+    {
+        return (int) round($this->life_points / max(1, $this->starting_life_points) * 100);
+    }
+
     public function addLifePoints(int $amount): void
     {
-        $this->changeLifePoints($this->life_points + $this->requirePositiveAmount($amount), 'add', $amount);
+        $amount = $this->requirePositiveAmount($amount);
+        $this->changeLifePoints(fn (int $lifePoints): int => $lifePoints + $amount, 'add', $amount);
     }
 
     public function subtractLifePoints(int $amount): void
     {
-        $this->changeLifePoints($this->life_points - $this->requirePositiveAmount($amount), 'subtract', $amount);
+        $amount = $this->requirePositiveAmount($amount);
+        $this->changeLifePoints(fn (int $lifePoints): int => $lifePoints - $amount, 'subtract', $amount);
     }
 
     public function setLifePointsTo(int $value): void
     {
-        $this->changeLifePoints($value, 'set', 0);
+        $this->changeLifePoints(fn (): int => $value, 'set', 0);
     }
 
     public function halveLifePoints(): void
     {
-        $this->changeLifePoints(intdiv($this->life_points + 1, 2), 'halve', 0);
+        $this->changeLifePoints(fn (int $lifePoints): int => intdiv($lifePoints + 1, 2), 'halve', 0);
     }
 
     public function doubleLifePoints(): void
     {
-        $this->changeLifePoints($this->life_points * 2, 'double', 0);
+        $this->changeLifePoints(fn (int $lifePoints): int => $lifePoints * 2, 'double', 0);
     }
 
     public function restoreStartingLifePoints(): void
     {
-        $this->changeLifePoints($this->starting_life_points, 'restore', 0);
+        $this->changeLifePoints(fn (): int => $this->starting_life_points, 'restore', 0);
     }
 
-    public function undoLifePointChange(): bool
+    /**
+     * @param  callable(int): int  $calculate
+     */
+    private function changeLifePoints(callable $calculate, string $operation, int $amount): void
     {
-        $event = $this->lifePointEvents()->whereNull('undone_at')->latest('id')->first();
+        $this->refresh();
 
-        if ($event === null) {
-            return false;
-        }
-
-        DB::transaction(function () use ($event): void {
-            $event->update(['undone_at' => now()]);
-            $this->update(['life_points' => $event->before]);
-        });
-
-        return true;
-    }
-
-    public function redoLifePointChange(): bool
-    {
-        $event = $this->lifePointEvents()->whereNotNull('undone_at')->latest('id')->first();
-
-        if ($event === null) {
-            return false;
-        }
-
-        DB::transaction(function () use ($event): void {
-            $event->update(['undone_at' => null]);
-            $this->update(['life_points' => $event->after]);
-        });
-
-        return true;
-    }
-
-    private function changeLifePoints(int $newValue, string $operation, int $amount): void
-    {
         $before = $this->life_points;
-        $after = max(self::MIN_LIFE_POINTS, min(self::MAX_LIFE_POINTS, $newValue));
+        $after = max(self::MIN_LIFE_POINTS, min(self::MAX_LIFE_POINTS, $calculate($before)));
 
         DB::transaction(function () use ($before, $after, $operation, $amount): void {
-            $this->lifePointEvents()->whereNotNull('undone_at')->delete();
+            LifePointEvent::query()
+                ->whereIn('duel_player_id', $this->duel->duelPlayers()->select('id'))
+                ->whereNotNull('undone_at')
+                ->delete();
 
             $this->update(['life_points' => $after]);
 

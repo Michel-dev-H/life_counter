@@ -26,4 +26,9 @@ class LifePointEvent extends Model
     {
         return $this->belongsTo(DuelPlayer::class);
     }
+
+    public function signedAmount(): int
+    {
+        return $this->after - $this->before;
+    }
 }

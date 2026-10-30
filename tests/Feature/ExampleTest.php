@@ -1,7 +1,5 @@
 <?php
 
-test('returns a successful response', function () {
-    $response = $this->get('/');
-
-    $response->assertOk();
+test('opens the duel setup from the root', function () {
+    $this->get('/')->assertRedirect(route('duel.setup'));
 });
