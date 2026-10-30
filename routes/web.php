@@ -2,6 +2,7 @@
 
 use App\Livewire\DuelArena;
 use App\Livewire\DuelSetup;
+use App\Livewire\AppearanceSettings;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/duel/new')->name('home');
