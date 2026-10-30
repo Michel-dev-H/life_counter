@@ -53,7 +53,6 @@
 
     --text-headline-md: 1.5rem;
     --text-headline-md--line-height: 2rem;
-    --text-headline-md--font-weight: 600;
 
     --text-headline-sm: 1.125rem;
     --text-headline-sm--line-height: 1.5rem;
@@ -96,40 +95,52 @@
     }
 }
 
-@layer components {
-    .hud-panel {
-        position: relative;
-        overflow: hidden;
-        border-radius: 0.75rem;
-        border: 1px solid rgba(0, 242, 254, 0.15);
-        background-color: rgba(13, 21, 39, 0.85);
-        backdrop-filter: blur(16px);
-    }
-
-    .chamfer {
-        clip-path: polygon(
-            8px 0,
-            100% 0,
-            100% calc(100% - 8px),
-            calc(100% - 8px) 100%,
-            0 100%,
-            0 8px
-        );
-    }
-
-    .tactical-grid {
-        background-image: radial-gradient(circle at 1px 1px, rgba(0, 220, 230, 0.35) 1px, transparent 0);
-        background-size: 28px 28px;
-    }
-
-    .text-glow {
-        text-shadow: 0 0 16px rgba(0, 220, 230, 0.6);
-    }
-
-    .shadow-glow {
-        box-shadow: 0 0 12px rgba(0, 242, 254, 0.3), 0 8px 32px rgba(0, 10, 30, 0.8);
-    }
+/* --- Theme-dependent CSS variables (set by the layout) --- */
+:root {
+    --theme-seat-accent: #b57bff; /* default: holographic */
+    --theme-scrim: rgba(15,19,29,0.4); /* default: holographic */
 }
+
+/* --- Override per theme via data attribute --- */
+body[data-theme="holographic"] { --theme-seat-accent: #b57bff; --theme-scrim: rgba(15,19,29,0.4); }
+body[data-theme="shadow-realm"] { --theme-seat-accent: #e8c06a; --theme-scrim: rgba(11,7,19,0.4); }
+body[data-theme="minimal-arena"] { --theme-seat-accent: #2f6f4e; --theme-scrim: rgba(247,247,244,0.1); }
+
+.hud-panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(var(--color-on-surface-rgb), 0.15);
+    background-color: rgba(var(--color-on-surface-rgb), 0.85);
+    backdrop-filter: blur(16px);
+}
+
+.chamfer {
+    clip-path: polygon(
+        8px 0,
+        100% 0,
+        100% calc(100% - 8px),
+        calc(100% - 8px) 100%,
+        0 100%,
+        0 8px
+    );
+}
+
+.tactical-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(0, 220, 230, 0.35) 1px, transparent 0);
+    background-size: 28px 28px;
+}
+
+.text-glow {
+    text-shadow: 0 0 16px rgba(0, 220, 230, 0.6);
+}
+
+.shadow-glow {
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.3), 0 8px 32px rgba(0, 10, 30, 0.8);
+}
+
+/* --- Seat accent via CSS variable --- */
+.seat-accent { color: var(--theme-seat-accent); }
 
 @utility pb-safe {
     padding-bottom: env(safe-area-inset-bottom, 0px);

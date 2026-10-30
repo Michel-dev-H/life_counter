@@ -110,7 +110,7 @@
                     <div class="flex items-start justify-between gap-2">
                         <div class="flex min-w-0 items-center gap-2">
                             <span class="flex size-9 shrink-0 items-center justify-center rounded bg-surface-container-high">
-                                <x-icon name="swords" class="size-4" style="color: {{ $player->color }}" />
+                                <x-icon name="swords" class="size-4" style="color: var(--theme-seat-accent)" />
                             </span>
 
                             <div class="min-w-0">
@@ -118,7 +118,8 @@
                                     <h2 class="truncate font-sans text-headline-sm tracking-tight text-on-surface">{{ $player->name }}</h2>
                                     <span
                                         class="rounded px-1.5 py-0.5 font-mono text-label-sm uppercase tracking-wider"
-                                        style="background-color: {{ $player->color }}29; color: {{ $player->color }}"
+                                        style="background-color: var(--theme-seat-accent); color: var(--theme-seat-accent)"
+                                        :class="$player->seat === 1 ? 'seat-tone-1' : 'seat-tone-2'"
                                     >
                                         {{ $player->seatLabel() }}
                                     </span>
@@ -162,7 +163,7 @@
                         <div class="mx-auto mt-2 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-surface-container-high">
                             <div
                                 class="h-full rounded-full transition-all duration-300"
-                                style="width: {{ min(100, $player->remainingPercentage()) }}%; background-color: {{ $player->color }}; box-shadow: 0 0 8px {{ $player->color }}"
+                                style="width: {{ min(100, $player->remainingPercentage()) }}%; background-color: var(--theme-seat-accent); box-shadow: 0 0 8px var(--theme-seat-accent)"
                             ></div>
                         </div>
 

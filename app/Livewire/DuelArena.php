@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Appearance;
 use App\Enums\DuelPhase;
 use App\Models\Duel;
 use App\Models\DuelPlayer;
