@@ -232,6 +232,20 @@ it('starts and pauses the timer from the arena', function () {
         ->and($duel->fresh()->timerRemainingSeconds())->toBe(Duel::MATCH_TIME_SECONDS - 5);
 });
 
+it('places the phase ribbon between the two players in a duel', function () {
+    $duel = duelWithSeats(2);
+
+    Livewire::test(DuelArena::class, ['duel' => $duel])
+        ->assertSeeInOrder(['Duelista 1', 'TURNO 01', 'Duelista 2']);
+});
+
+it('keeps the phase ribbon above the grid with more than two players', function () {
+    $duel = duelWithSeats(3);
+
+    Livewire::test(DuelArena::class, ['duel' => $duel])
+        ->assertSeeInOrder(['TURNO 01', 'Duelista 1', 'Duelista 2', 'Duelista 3']);
+});
+
 it('resets the timer from the arena', function () {
     $duel = duelWithSeats(2);
 
