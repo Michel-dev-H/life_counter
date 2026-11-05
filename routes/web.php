@@ -1,11 +1,12 @@
 <?php
 
+use App\Livewire\AppearanceSettings;
 use App\Livewire\DuelArena;
 use App\Livewire\DuelSetup;
-use App\Livewire\AppearanceSettings;
+use App\Livewire\HomeDashboard;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/duel/new')->name('home');
+Route::livewire('/', HomeDashboard::class)->name('home');
 
 Route::livewire('/duel/new', DuelSetup::class)->name('duel.setup');
 

@@ -37,6 +37,21 @@ it('seats players in the order they were given', function () {
         ->and($duel->duelPlayers->pluck('name')->all())->toBe(['Ana', 'Bruno', 'Caio']);
 });
 
+it('assigns a default theme-safe identity when no player options are selected', function () {
+    $duel = Duel::startWith([['name' => 'Ana'], ['name' => 'Bruno']]);
+
+    expect($duel->duelPlayers->pluck('color')->all())->toBe(['cyan', 'gold'])
+        ->and($duel->duelPlayers->pluck('icon')->all())->toBe([null, null]);
+});
+
+it('rejects player identity options outside the supported palette', function (array $seat) {
+    expect(fn () => Duel::startWith([$seat]))
+        ->toThrow(InvalidArgumentException::class);
+})->with([
+    'unknown color' => [['name' => 'Ana', 'color' => '#000000']],
+    'unknown icon' => [['name' => 'Ana', 'icon' => 'custom-image']],
+]);
+
 it('links a registered player and copies their name', function () {
     $player = Player::factory()->create(['name' => 'Michel']);
 

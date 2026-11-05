@@ -1,7 +1,7 @@
 # Duel Companion — Theme & Wallpaper Guidelines
 
 ## Overview
-This app supports three visual themes that users can switch between at runtime. All components render based on a `data-theme` attribute on the `<html>` element. When a custom wallpaper is uploaded, a theme-colored scrim preserves WCAG AAA contrast.
+This app supports three visual themes that users can switch between at runtime. Components render based on a `data-theme` attribute on the `<body>` element. The browser's `theme-color` metadata follows the selected theme. A theme-colored scrim is intended to improve readability over custom wallpapers; its contrast still requires the validation tracked in [task 027](./tarefas/027-contraste-e-scrim-do-papel-de-parede.md).
 
 ## Theme Tokens
 Each theme provides a complete set of color tokens used by the Tailwind CSS layer. The tokens are:
@@ -26,10 +26,11 @@ Each theme provides a complete set of color tokens used by the Tailwind CSS laye
 | heal | `#00f5a0` | `#3fe0a2` | `#2f6f4e` |
 
 ## Runtime Theme Switching
-1. The `<html>` element receives `data-theme="holographic|shadow-realm|minimal-arena"` via a Livewire-rendered attribute.
+1. The `<body>` element receives `data-theme="holographic|shadow-realm|minimal-arena"` via a Livewire-rendered attribute.
 2. Tailwind's `@layer utilities` generates per-theme utilities using `[data-theme="holographic"] .class { ... }`.
-3. The Livewire component `AppearanceSettings` saves the selected theme to the `settings` table (`key = 'appearance.theme'`).
+3. The Livewire component `AppearanceSettings` saves the selected theme through `Appearance::selectTheme()` to the `settings` table (`key = 'appearance.theme'`).
 4. On page load, `Appearance::theme()` reads the stored value and applies it.
+5. On selection, a Livewire browser event updates the body's `data-theme` and the `theme-color` meta tag without reloading the page.
 
 ## Wallpaper Upload & Contrast Scrim
 1. Users may upload one image from the phone's gallery via `AppearanceSettings`.
@@ -38,11 +39,10 @@ Each theme provides a complete set of color tokens used by the Tailwind CSS laye
 4. If the wallpaper is removed, the scrim falls back to the solid theme surface color.
 5. Maximum file size: 2 MB. Accepted MIME types: `image/jpeg`, `image/png`, `image/webp`.
 
-## Seat Accent Tokens
-Player seat accent colors **must not** use stored hex values (`SEAT_COLORS`). Instead:
-1. Each theme defines a seat accent token: Holographic → `#b57bff` (spectral violet), Shadow Realm → `#e8c06a` (ember gold), Minimal → `#2f6f4e` (field green).
-2. The component reads the current theme and applies `style="color: var(--theme-seat-accent)"`.
-3. This ensures consistent colors regardless of whether a wallpaper is present.
+## Player Accent Tokens
+Player colors are stored as semantic keys (`cyan`, `gold`, `rose`, `mint`, `violet`, `orange`, `blue`, `pink`), never as user-selected hex values. Each theme maps those keys to its own readable palette in `resources/css/app.css`.
+
+The setup and arena use the selected key for the player's accent, icon, and life-point indicator. Players with no selected icon use the standard swords icon. Existing sessions with stored hex colors resolve to their seat's theme token so old duels remain readable.
 
 ## Adding a New Theme
 1. Define a new `Theme` enum value.

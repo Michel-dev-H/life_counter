@@ -50,30 +50,50 @@ class Duel extends Model
         ];
     }
 
-    /** @var array<int, string> */
-    public const SEAT_COLORS = [
-        '#00f2fe',
-        '#ffd166',
-        '#ff3366',
-        '#00f5a0',
-        '#a78bfa',
-        '#fb923c',
-        '#38bdf8',
-        '#f472b6',
+    /** @var array<string, string> */
+    public const PLAYER_ACCENTS = [
+        'cyan' => 'Ciano',
+        'gold' => 'Dourado',
+        'rose' => 'Rosa intenso',
+        'mint' => 'Menta',
+        'violet' => 'Violeta',
+        'orange' => 'Laranja',
+        'blue' => 'Azul',
+        'pink' => 'Rosa',
     ];
 
+    /** @var array<string, string> */
+    public const PLAYER_ICONS = [
+        'swords' => 'Espadas',
+        'shield' => 'Escudo',
+        'star' => 'Estrela',
+        'sparkles' => 'Brilhos',
+        'bolt' => 'Raio',
+        'flame' => 'Chama',
+        'crown' => 'Coroa',
+        'leaf' => 'Folha',
+    ];
+
+    /** @return HasMany<DuelPlayer, $this> */
     public function duelPlayers(): HasMany
     {
         return $this->hasMany(DuelPlayer::class);
     }
 
+    /** @return HasManyThrough<LifePointEvent, DuelPlayer, $this> */
     public function lifePointEvents(): HasManyThrough
     {
         return $this->hasManyThrough(LifePointEvent::class, DuelPlayer::class);
     }
 
+    /** @return HasMany<DiceRoll, $this> */
+    public function diceRolls(): HasMany
+    {
+        return $this->hasMany(DiceRoll::class);
+    }
+
     /**
-     * @param  array<int, array{name?: string, player_id?: int|null, color?: string}>  $seats
+     * @param  array<int, array{name?: string, player_id?: int|null, color?: string, icon?: string|null}>  $seats
      */
     public static function startWith(array $seats, int $startingLifePoints = 8000): self
     {
@@ -93,11 +113,22 @@ class Duel extends Model
             foreach (array_values($seats) as $index => $seat) {
                 $player = isset($seat['player_id']) ? Player::find($seat['player_id']) : null;
                 $name = trim((string) ($seat['name'] ?? ''));
+                $color = $seat['color'] ?? array_keys(self::PLAYER_ACCENTS)[$index];
+                $icon = $seat['icon'] ?? null;
+
+                if (! array_key_exists($color, self::PLAYER_ACCENTS)) {
+                    throw new InvalidArgumentException('A cor do jogador não está disponível.');
+                }
+
+                if ($icon !== null && ! array_key_exists($icon, self::PLAYER_ICONS)) {
+                    throw new InvalidArgumentException('O ícone do jogador não está disponível.');
+                }
 
                 $duel->duelPlayers()->create([
                     'player_id' => $player?->id,
                     'name' => $name !== '' ? $name : ($player?->name ?? 'Jogador '.($index + 1)),
-                    'color' => $seat['color'] ?? self::SEAT_COLORS[$index],
+                    'color' => $color,
+                    'icon' => $icon,
                     'starting_life_points' => $startingLifePoints,
                     'life_points' => $startingLifePoints,
                     'seat' => $index,

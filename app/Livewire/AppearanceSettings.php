@@ -7,6 +7,7 @@ use App\Enums\Theme;
 use App\Models\Setting;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -32,7 +33,7 @@ class AppearanceSettings extends Component
         $this->selectedTheme = app(Appearance::class)->theme()->value;
     }
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         $theme = $this->selectedTheme;
 
@@ -55,25 +56,32 @@ class AppearanceSettings extends Component
 
         if ($theme === null) {
             $this->addError('theme', 'Tema inválido.');
+
             return;
         }
 
         $this->selectedTheme = $theme->value;
-        Setting::write('appearance.theme', $theme->value);
+        app(Appearance::class)->selectTheme($theme);
 
-        $this->dispatch('theme-updated', theme: $theme->value);
+        $this->dispatch(
+            'theme-updated',
+            theme: $theme->value,
+            browserColor: $theme->browserColor(),
+        );
     }
 
     public function saveWallpaper(): void
     {
-        if ($this->wallpaper === null || !$this->wallpaper->isValid()) {
+        if ($this->wallpaper === null || ! $this->wallpaper->isValid()) {
             $this->addError('wallpaper', 'Por favor, selecione uma imagem.');
+
             return;
         }
 
         $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!in_array($this->wallpaper->getMimeType(), $allowedMimeTypes)) {
+        if (! in_array($this->wallpaper->getMimeType(), $allowedMimeTypes)) {
             $this->addError('wallpaper', 'Tipo de arquivo inválido. Apenas imagens são permitidas.');
+
             return;
         }
 

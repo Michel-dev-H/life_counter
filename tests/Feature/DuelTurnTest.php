@@ -236,7 +236,7 @@ it('places the phase ribbon between the two players in a duel', function () {
     $duel = duelWithSeats(2);
 
     Livewire::test(DuelArena::class, ['duel' => $duel])
-        ->assertSeeInOrder(['Duelista 1', 'TURNO 01', 'Duelista 2']);
+        ->assertSeeInOrder(['Duelista 2', 'TURNO 01', 'Duelista 1']);
 });
 
 it('keeps the phase ribbon above the grid with more than two players', function () {
@@ -245,6 +245,14 @@ it('keeps the phase ribbon above the grid with more than two players', function 
     Livewire::test(DuelArena::class, ['duel' => $duel])
         ->assertSeeInOrder(['TURNO 01', 'Duelista 1', 'Duelista 2', 'Duelista 3']);
 });
+
+it('renders the phase ribbon only once for a one or three player duel', function (int $playerCount) {
+    $duel = duelWithSeats($playerCount);
+
+    $html = Livewire::test(DuelArena::class, ['duel' => $duel])->html();
+
+    expect(substr_count($html, 'Ação recente:'))->toBe(1);
+})->with([1, 3]);
 
 it('resets the timer from the arena', function () {
     $duel = duelWithSeats(2);

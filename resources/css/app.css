@@ -97,14 +97,53 @@
 
 /* --- Theme-dependent CSS variables (set by the layout) --- */
 :root {
-    --theme-seat-accent: #b57bff; /* default: holographic */
     --theme-scrim: rgba(15,19,29,0.4); /* default: holographic */
+    --player-accent-cyan: #00dce6;
+    --player-accent-gold: #edc157;
+    --player-accent-rose: #ff6685;
+    --player-accent-mint: #00d99e;
+    --player-accent-violet: #b57bff;
+    --player-accent-orange: #ff985e;
+    --player-accent-blue: #6aa9ff;
+    --player-accent-pink: #ff78c6;
 }
 
 /* --- Override per theme via data attribute --- */
-body[data-theme="holographic"] { --theme-seat-accent: #b57bff; --theme-scrim: rgba(15,19,29,0.4); }
-body[data-theme="shadow-realm"] { --theme-seat-accent: #e8c06a; --theme-scrim: rgba(11,7,19,0.4); }
-body[data-theme="minimal-arena"] { --theme-seat-accent: #2f6f4e; --theme-scrim: rgba(247,247,244,0.1); }
+body[data-theme="holographic"] {
+    --theme-scrim: rgba(15,19,29,0.4);
+    --player-accent-cyan: #00dce6;
+    --player-accent-gold: #edc157;
+    --player-accent-rose: #ff6685;
+    --player-accent-mint: #00d99e;
+    --player-accent-violet: #b57bff;
+    --player-accent-orange: #ff985e;
+    --player-accent-blue: #6aa9ff;
+    --player-accent-pink: #ff78c6;
+}
+
+body[data-theme="shadow-realm"] {
+    --theme-scrim: rgba(11,7,19,0.4);
+    --player-accent-cyan: #62e2e8;
+    --player-accent-gold: #e8c06a;
+    --player-accent-rose: #ff8394;
+    --player-accent-mint: #63d8b0;
+    --player-accent-violet: #c7a2ff;
+    --player-accent-orange: #ffab74;
+    --player-accent-blue: #82bbff;
+    --player-accent-pink: #f49ad4;
+}
+
+body[data-theme="minimal-arena"] {
+    --theme-scrim: rgba(247,247,244,0.1);
+    --player-accent-cyan: #008e9c;
+    --player-accent-gold: #947000;
+    --player-accent-rose: #d1385e;
+    --player-accent-mint: #168a5c;
+    --player-accent-violet: #875fe8;
+    --player-accent-orange: #c24e0a;
+    --player-accent-blue: #3879df;
+    --player-accent-pink: #d03993;
+}
 
 .hud-panel {
     position: relative;
@@ -139,13 +178,62 @@ body[data-theme="minimal-arena"] { --theme-seat-accent: #2f6f4e; --theme-scrim: 
     box-shadow: 0 0 12px rgba(0, 242, 254, 0.3), 0 8px 32px rgba(0, 10, 30, 0.8);
 }
 
-/* --- Seat accent via CSS variable --- */
-.seat-accent { color: var(--theme-seat-accent); }
-
 @utility pb-safe {
     padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 @utility pt-safe {
     padding-top: env(safe-area-inset-top, 0px);
+}
+
+@keyframes life-point-value-feedback {
+    0% {
+        transform: scale(0.94);
+        opacity: 0.75;
+    }
+
+    55% {
+        transform: scale(1.06);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.life-point-value-feedback {
+    animation: life-point-value-feedback 420ms ease-out;
+}
+
+.life-point-value-feedback--damage {
+    color: var(--color-damage);
+}
+
+.life-point-value-feedback--recovery {
+    color: var(--color-heal);
+}
+
+@keyframes dice-roll-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem) scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.dice-roll-reveal {
+    animation: dice-roll-reveal 260ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .life-point-value-feedback,
+    .dice-roll-reveal {
+        animation: none;
+    }
 }

@@ -105,6 +105,48 @@ it('rejects a non positive amount', function () {
         ->toThrow(InvalidArgumentException::class);
 });
 
+it('rejects an operation amount above the supported maximum', function (string $operation) {
+    $player = duelPlayerWith(8000);
+
+    expect(fn () => $player->{$operation}(DuelPlayer::MAX_LIFE_POINTS + 1))
+        ->toThrow(InvalidArgumentException::class, 'O valor não pode exceder '.DuelPlayer::MAX_LIFE_POINTS.'.');
+})->with([
+    'adding' => 'addLifePoints',
+    'subtracting' => 'subtractLifePoints',
+]);
+
+it('rejects an integer amount that would overflow the life point calculation', function () {
+    $player = duelPlayerWith(8000);
+
+    expect(fn () => $player->addLifePoints(PHP_INT_MAX))
+        ->toThrow(InvalidArgumentException::class, 'O valor não pode exceder '.DuelPlayer::MAX_LIFE_POINTS.'.');
+});
+
+it('does not record an operation that leaves life points unchanged', function (int $lifePoints, string $operation) {
+    $player = duelPlayerWith($lifePoints);
+
+    $player->{$operation}(1);
+
+    expect($player->fresh()->life_points)->toBe($lifePoints)
+        ->and($player->lifePointEvents()->count())->toBe(0);
+})->with([
+    'at the maximum' => [DuelPlayer::MAX_LIFE_POINTS, 'addLifePoints'],
+    'at zero' => [DuelPlayer::MIN_LIFE_POINTS, 'subtractLifePoints'],
+]);
+
+it('preserves redo history when an operation does not change life points', function () {
+    $player = duelPlayerWith(DuelPlayer::MAX_LIFE_POINTS);
+    $player->subtractLifePoints(1);
+    $player->duel->undoLastLifePointChange();
+
+    $player->addLifePoints(1);
+
+    expect($player->fresh()->life_points)->toBe(DuelPlayer::MAX_LIFE_POINTS)
+        ->and($player->lifePointEvents()->count())->toBe(1)
+        ->and($player->duel->redoLastLifePointChange())->toBeTrue()
+        ->and($player->fresh()->life_points)->toBe(DuelPlayer::MAX_LIFE_POINTS - 1);
+});
+
 it('undoes the last change of the duel', function () {
     $player = duelPlayerWith(8000);
     $player->subtractLifePoints(1500);

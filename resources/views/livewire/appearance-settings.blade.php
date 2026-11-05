@@ -1,7 +1,7 @@
 @props(['themes', 'selectedTheme', 'wallpaperUrl'])
 @use(App\Appearance)
 
-<div>
+<div x-on:theme-updated.window="document.body.dataset.theme = $event.detail.theme; document.querySelector('meta[name=theme-color]').content = $event.detail.browserColor">
     <h2 class="font-mono text-label-md uppercase tracking-wider text-on-surface">Aparência</h2>
 
     <section class="mt-4 grid grid-cols-3 gap-2">
@@ -54,25 +54,7 @@
         </p>
 
         <p class="mt-2 font-mono text-label-sm text-on-surface-variant">
-            Escolha entre <strong>Holographic Duel</strong>, <strong>Shadow Realm</strong> ou <strong>Minimal Arena</strong>. A mudança é aplicada imediatamente e persistida entre sessões pelo layout (data-theme no <html>).
+            Escolha entre <strong>Holographic Duel</strong>, <strong>Shadow Realm</strong> ou <strong>Minimal Arena</strong>. A mudança é aplicada imediatamente e persistida entre sessões pelo layout (data-theme no <body>).
         </p>
     </section>
 </div>
-
-@section('scripts')
-<script>
-    // Escutar evento de atualização de tema do PHP
-    window.addEventListener('theme-updated', function (e) {
-        const theme = e.detail.theme;
-        document.documentElement.setAttribute('data-theme', theme);
-    });
-
-    // Escutar evento de salvamento de papel de parede
-    window.addEventListener('save-wallpaper', function (e) {
-        const base64 = e.detail.base64;
-        // Enviar para o Livewire
-        const event = new CustomEvent('set-wallpaper', { detail: { base64 } });
-        document.dispatchEvent(event);
-    });
-</script>
-@endsection

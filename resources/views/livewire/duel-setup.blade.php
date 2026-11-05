@@ -122,32 +122,73 @@
 
             <div class="mt-2 flex flex-col gap-2">
                 @foreach ($playerNames as $index => $name)
-                    <div class="flex items-center gap-2" wire:key="player-slot-{{ $index }}">
-                        <span
-                            class="flex size-10 shrink-0 items-center justify-center rounded bg-surface-container-high font-mono text-label-md font-bold"
-                            style="color: {{ \App\Models\Duel::SEAT_COLORS[$index] ?? '#00f2fe' }}"
-                        >
-                            P{{ $index + 1 }}
-                        </span>
+                    <div class="rounded border border-white/10 bg-surface-container-low p-3" wire:key="player-slot-{{ $index }}">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="flex size-10 shrink-0 items-center justify-center rounded bg-surface-container-high font-mono text-label-md font-bold text-primary-container"
+                            >
+                                P{{ $index + 1 }}
+                            </span>
 
-                        <input
-                            type="text"
-                            maxlength="40"
-                            wire:model="playerNames.{{ $index }}"
-                            placeholder="Jogador {{ $index + 1 }}"
-                            class="h-12 min-w-0 flex-1 rounded border border-white/10 bg-surface-container-lowest px-3 font-sans text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary-container focus:outline-none"
-                            aria-label="Nome do jogador {{ $index + 1 }}"
-                        >
+                            <input
+                                type="text"
+                                maxlength="40"
+                                wire:model="playerNames.{{ $index }}"
+                                placeholder="Jogador {{ $index + 1 }}"
+                                class="h-12 min-w-0 flex-1 rounded border border-white/10 bg-surface-container-lowest px-3 font-sans text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:border-primary-container focus:outline-none"
+                                aria-label="Nome do jogador {{ $index + 1 }}"
+                            >
 
-                        <button
-                            type="button"
-                            wire:click="removePlayer({{ $index }})"
-                            @disabled(count($playerNames) === 1)
-                            class="flex size-12 shrink-0 items-center justify-center rounded text-on-surface-variant transition-colors hover:text-damage disabled:opacity-30"
-                            aria-label="Remover jogador {{ $index + 1 }}"
-                        >
-                            <x-icon name="x" />
-                        </button>
+                            <button
+                                type="button"
+                                wire:click="removePlayer({{ $index }})"
+                                @disabled(count($playerNames) === 1)
+                                class="flex size-12 shrink-0 items-center justify-center rounded text-on-surface-variant transition-colors hover:text-damage disabled:opacity-30"
+                                aria-label="Remover jogador {{ $index + 1 }}"
+                            >
+                                <x-icon name="x" />
+                            </button>
+                        </div>
+
+                        <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+                            <div role="group" aria-label="Cor de identificação do jogador {{ $index + 1 }}" class="flex flex-wrap gap-2">
+                                @foreach (\App\Models\Duel::PLAYER_ACCENTS as $accent => $label)
+                                    <button
+                                        type="button"
+                                        wire:click="$set('playerColors.{{ $index }}', '{{ $accent }}')"
+                                        aria-label="Cor {{ $label }}"
+                                        aria-pressed="{{ ($playerColors[$index] ?? '') === $accent ? 'true' : 'false' }}"
+                                        @class([
+                                            'size-8 rounded-full border-2 transition',
+                                            'border-on-surface ring-2 ring-primary/40' => ($playerColors[$index] ?? '') === $accent,
+                                            'border-transparent' => ($playerColors[$index] ?? '') !== $accent,
+                                        ])
+                                        style="background-color: var(--player-accent-{{ $accent }})"
+                                    ></button>
+                                @endforeach
+                            </div>
+
+                            <label class="flex min-w-40 flex-1 items-center gap-2 font-mono text-label-sm text-on-surface-variant sm:flex-none">
+                                Ícone
+                                <select
+                                    wire:model="playerIcons.{{ $index }}"
+                                    aria-label="Ícone do jogador {{ $index + 1 }}"
+                                    class="h-10 min-w-0 flex-1 rounded border border-white/10 bg-surface-container-lowest px-2 text-body-sm text-on-surface focus:border-primary-container focus:outline-none sm:w-40"
+                                >
+                                    <option value="">Padrão da arena</option>
+                                    @foreach (\App\Models\Duel::PLAYER_ICONS as $icon => $label)
+                                        <option value="{{ $icon }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </label>
+                        </div>
+
+                        @error('playerColors.'.$index)
+                            <p class="mt-2 font-mono text-label-sm text-damage">{{ $message }}</p>
+                        @enderror
+                        @error('playerIcons.'.$index)
+                            <p class="mt-2 font-mono text-label-sm text-damage">{{ $message }}</p>
+                        @enderror
                     </div>
                 @endforeach
 

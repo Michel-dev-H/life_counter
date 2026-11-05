@@ -77,6 +77,22 @@ class DuelPlayer extends Model
         };
     }
 
+    public function accentToken(): string
+    {
+        if (array_key_exists($this->color, Duel::PLAYER_ACCENTS)) {
+            return $this->color;
+        }
+
+        return array_keys(Duel::PLAYER_ACCENTS)[$this->seat % count(Duel::PLAYER_ACCENTS)];
+    }
+
+    public function iconName(): string
+    {
+        return $this->icon !== null && array_key_exists($this->icon, Duel::PLAYER_ICONS)
+            ? $this->icon
+            : 'swords';
+    }
+
     public function remainingPercentage(): int
     {
         return (int) round($this->life_points / max(1, $this->starting_life_points) * 100);
@@ -124,6 +140,10 @@ class DuelPlayer extends Model
         $before = $this->life_points;
         $after = max(self::MIN_LIFE_POINTS, min(self::MAX_LIFE_POINTS, $calculate($before)));
 
+        if ($after === $before) {
+            return;
+        }
+
         DB::transaction(function () use ($before, $after, $operation, $amount): void {
             LifePointEvent::query()
                 ->whereIn('duel_player_id', $this->duel->duelPlayers()->select('id'))
@@ -145,6 +165,10 @@ class DuelPlayer extends Model
     {
         if ($amount < 1) {
             throw new InvalidArgumentException('O valor precisa ser maior que zero.');
+        }
+
+        if ($amount > self::MAX_LIFE_POINTS) {
+            throw new InvalidArgumentException('O valor não pode exceder '.self::MAX_LIFE_POINTS.'.');
         }
 
         return $amount;

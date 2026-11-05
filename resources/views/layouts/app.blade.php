@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        @use(App\Appearance)
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-        <meta name="theme-color" content="#0f131d">
-        @use(App\Appearance)
+        <meta name="theme-color" content="{{ app(Appearance::class)->theme()->browserColor() }}">
         <title>{{ $title ?? config('app.name') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         {{ Vite::fonts() }}
         @livewireStyles
     </head>
-    <body class="min-h-dvh bg-surface font-sans text-on-surface antialiased selection:bg-primary-container selection:text-on-primary" data-theme="{{ app(Appearance::class)->theme()->value }}">
-        {{ $slot }}
+    <body class="min-h-dvh bg-surface font-sans text-on-surface antialiased selection:bg-primary-container selection:text-on-primary <?= app(Appearance::class)->wallpaperPath() ? ' wallpaper__scrim' : '' ?>" data-theme="{{ app(Appearance::class)->theme()->value }}">
+        @if (request()->routeIs('duel.arena'))
+            {{ $slot }}
+        @else
+            <div class="min-h-dvh md:flex">
+                <aside class="hidden w-60 shrink-0 flex-col border-r border-white/10 bg-surface-container-lowest px-4 py-6 md:flex">
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 px-2 text-on-surface">
+                        <span class="flex size-10 items-center justify-center rounded-xl bg-primary-container/10 text-primary">
+                            <x-icon name="shield" class="size-5" />
+                        </span>
+                        <span>
+                            <span class="block text-base font-semibold">Life Counter</span>
+                            <span class="block text-xs text-on-surface-variant">Duel Companion</span>
+                        </span>
+                    </a>
+
+                    <div class="mt-8">
+                        @include('layouts.primary-navigation', ['placement' => 'sidebar'])
+                    </div>
+                </aside>
+
+                <div class="min-w-0 flex-1 pb-24 md:pb-0">
+                    {{ $slot }}
+                </div>
+
+                <div class="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-surface-container-lowest/95 pb-safe backdrop-blur md:hidden">
+                    @include('layouts.primary-navigation', ['placement' => 'mobile'])
+                </div>
+            </div>
+        @endif
+
         @livewireScripts
     </body>
 </html>

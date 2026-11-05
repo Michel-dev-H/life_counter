@@ -52,3 +52,43 @@ Avanço automático de fases ou execução de efeitos não faz parte deste recur
 - [ ] Validar cronômetro em build NativePHP Android, incluindo suspensão, retorno e encerramento do app.
 
 **Conclusão:** as funções básicas estão implementadas e os testes focados passam. A tarefa permanece aberta até as decisões aprovadas serem implementadas e verificadas em Android.
+
+## Registro para continuidade por outro agente
+
+### Trabalho realizado
+
+- Foi feita uma revisão da implementação existente e dos testes, sem alterar código. `php artisan test --compact tests\Feature\DuelTurnTest.php` passou com 22 testes.
+- Foram documentados o comportamento manual das fases, o avanço de turno/rodada/assento, o cronômetro com iniciar/pausar/retomar/reiniciar e o limite de 40 minutos.
+- A revisão observou que o cronômetro grava `timer_elapsed_seconds` e `timer_started_at`, mas a exibição usa `setInterval` local dentro de `wire:ignore`; não há sincronização explícita quando o app retorna do segundo plano.
+- Não há registro de fase/turno no histórico unificado; esse histórico é tarefa 019. Não houve build/teste NativePHP para esta tarefa.
+
+### Decisões de produto já aprovadas
+
+- Avançar turno reseta a fase para Draw; fases não avançam automaticamente.
+- Uma opção por duelo oculta/mostra em conjunto fases e turnos. Ocultar não apaga o estado e não provoca avanço implícito.
+- Undo/Redo continua acessível quando a faixa de fase/turno estiver oculta.
+- A preferência de exibição persiste por duelo.
+- O cronômetro continua contando em segundo plano; ao retornar, a exibição deve ser recalculada a partir do tempo persistido.
+- Mostrar “Vez de [nome]” para o participante ativo, inclusive nos assentos 1 e 2.
+
+### Metodologia, regras e skills
+
+- Revisão por critérios e testes existentes; separar decisões confirmadas de mudanças ainda não implementadas.
+- Nenhum código foi escrito. Assim, TDD, Pint, PHPStan e build não foram executados nesta revisão.
+- `grilling` foi usado para esclarecer as decisões de comportamento com o usuário. A documentação de teste consultada corresponde aos padrões Pest do projeto; não há registro de uma skill Laravel/Livewire ativada especificamente para esta revisão.
+
+### Próximos passos executáveis
+
+1. Antes de editar, abrir `.ai/rules/index.md`; para arquivos `app/**/*.php` ler `.ai/rules/app.md` e para `tests/**/*.php` ler `.ai/rules/tests.md`. Aplicar qualquer regra encontrada por `grep -rin 'keyword' .ai/rules`.
+2. Implementar os comportamentos aprovados, preservando o modelo atual de persistência e Undo/Redo; inspecionar estado/relacionamentos antes de introduzir colunas ou settings.
+3. Adicionar testes Pest antes das mudanças de produção para reset de fase, preferência por duelo, preservação enquanto oculto, acesso a Undo/Redo e rótulo pelo nome.
+4. Sincronizar o relógio no evento de retorno ao foreground usando o estado persistido, não somar apenas ticks locais.
+5. Rodar primeiro `php artisan test --compact tests\Feature\DuelTurnTest.php`; depois testes focados relacionados, Pint para PHP alterado e `git diff --check`.
+6. Validar o cronômetro em build NativePHP Android suspendendo/retomando o app e reabrindo a partida; a tarefa 003 registra que retomada visual ainda não está comprovada consistentemente.
+
+### Arquivos conhecidos do fluxo
+
+- `app/Livewire/DuelArena.php` e `resources/views/livewire/duel-arena.blade.php`: estado/ações e apresentação de fases, turno, assento ativo e cronômetro.
+- `tests/Feature/DuelTurnTest.php`: testes focados existentes (22 no momento da revisão).
+- `app/Models/Duel.php`: estado persistido da partida; confirmar colunas/métodos antes de ampliar persistência.
+- `docs/tarefas/019-historico-unificado-de-eventos.md`: escopo relacionado, não incluído nesta tarefa.

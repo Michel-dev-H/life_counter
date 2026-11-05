@@ -3,6 +3,8 @@
 use App\Appearance;
 use App\Enums\Theme;
 use App\Livewire\AppearanceSettings;
+use App\Livewire\DuelArena;
+use App\Models\Duel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -18,19 +20,25 @@ it('applies the default theme and no wallpaper to the layout', function () {
     $this->get(route('duel.setup'))
         ->assertOk()
         ->assertSee('data-theme="holographic"', false)
+        ->assertSee('<meta name="theme-color" content="#0f131d">', false)
         ->assertDontSee('wallpaper__scrim', false);
 });
 
 it('lets the user pick a theme and persists it', function () {
     Livewire::test(AppearanceSettings::class)
         ->call('selectTheme', Theme::ShadowRealm->value)
+        ->assertDispatched('theme-updated', fn (string $name, array $params): bool => $params === [
+            'theme' => Theme::ShadowRealm->value,
+            'browserColor' => '#0b0713',
+        ])
         ->assertHasNoErrors();
 
     expect(app(Appearance::class)->theme())->toBe(Theme::ShadowRealm);
 
     $this->get(route('duel.setup'))
         ->assertOk()
-        ->assertSee('data-theme="shadow-realm"', false);
+        ->assertSee('data-theme="shadow-realm"', false)
+        ->assertSee('<meta name="theme-color" content="#0b0713">', false);
 });
 
 it('rejects a theme that does not exist', function () {
@@ -65,7 +73,7 @@ it('stores an uploaded wallpaper on the public disk', function () {
     $this->get(route('duel.setup'))
         ->assertOk()
         ->assertSee('wallpaper__scrim', false)
-        ->assertSee('storage/wallpapers', false);
+        ->assertDontSee('storage/wallpapers');
 });
 
 it('rejects a wallpaper that is not an image', function () {
@@ -123,13 +131,13 @@ it('removes the wallpaper from the disk and the layout', function () {
 });
 
 it('renders seat accents through theme tokens instead of stored colors', function () {
-    $duel = App\Models\Duel::startWith([
+    $duel = Duel::startWith([
         ['name' => 'Ana'],
         ['name' => 'Bruno'],
     ]);
 
-    Livewire::test(App\Livewire\DuelArena::class, ['duel' => $duel])
-        ->assertSee('seat-tone-1', false)
-        ->assertSee('seat-tone-2', false)
+    Livewire::test(DuelArena::class, ['duel' => $duel])
+        ->assertSee('text-primary-container', false)
+        ->assertSee('text-secondary', false)
         ->assertDontSee('background-color: #00f2fe', false);
 });
