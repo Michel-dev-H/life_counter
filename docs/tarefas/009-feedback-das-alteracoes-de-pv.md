@@ -73,3 +73,10 @@ Dar retorno rápido e inequívoco para alterações de PV sem atrasar as jogadas
 - Comando focado: `php artisan test --compact tests\Feature\DuelArenaTest.php` — 46 testes/194 assertions no resultado registrado; suíte completa `php artisan test --compact` — 123 testes/383 assertions.
 - `npm run build` e Pint passaram. PHPStan passou para `DuelArena`; com `Duel.php`, apontou quatro problemas de tipagem preexistentes naquela classe.
 - Browser confirmou dano/recuperação e `prefers-reduced-motion`; isso não valida vibração física. A API NativePHP foi identificada como `Device::vibrate(): bool`, porém não foi exercitada em Android. Não há API de som integrada confirmada; áudio segue pendente.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Toggle de vibração funciona e persiste após reload (Vibração ativada <-> Vibração desativada).
+- Som: sem API de áudio no NativePHP 4.7; permanece bloqueado.
+- Keep-awake/orientação: não implementados (tarefa 028).

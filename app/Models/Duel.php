@@ -92,6 +92,18 @@ class Duel extends Model
         return $this->hasMany(DiceRoll::class);
     }
 
+    /** @return HasMany<CoinFlip, $this> */
+    public function coinFlips(): HasMany
+    {
+        return $this->hasMany(CoinFlip::class);
+    }
+
+    /** @return HasMany<Reminder, $this> */
+    public function reminders(): HasMany
+    {
+        return $this->hasMany(Reminder::class);
+    }
+
     /**
      * @param  array<int, array{name?: string, player_id?: int|null, color?: string, icon?: string|null}>  $seats
      */
@@ -172,6 +184,7 @@ class Duel extends Model
             'turn' => $turn,
             'round' => intdiv($turn - 1, $playerCount) + 1,
             'active_seat' => ($turn - 1) % $playerCount,
+            'phase' => DuelPhase::Draw,
         ]);
     }
 

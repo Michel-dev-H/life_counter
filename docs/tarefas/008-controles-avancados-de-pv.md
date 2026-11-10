@@ -72,3 +72,9 @@ Completar os controles de cálculo da arena sem exigir navegação excessiva nem
 - Comandos registrados: `php artisan test --compact tests\Feature\DuelArenaTest.php` (38 focados), `php artisan test --compact` (115 testes/343 assertions), `npm run build`, Pint e `git diff --check`.
 - PHPStan reportou 24 problemas preexistentes no worktree. A inspeção browser mediu 390 px (modal 343 px, alvos ≥44 px) e 1280 px; também conferiu prévia de definir PV e erro acima do limite.
 - Nenhum teste NativePHP desta calculadora foi registrado; não inferir a partir do build web.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Calculadora abre com modos Subtrair/Adicionar/Definir e teclado numérico; valor inicial 0.
+- Botão Valor abre a calculadora.

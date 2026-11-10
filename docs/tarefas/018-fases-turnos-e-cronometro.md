@@ -1,6 +1,6 @@
 # 018 — Fases, turnos e cronômetro
 
-- **Status:** Revisado — melhorias aprovadas aguardando implementação
+- **Status:** Parcial - Fase 1 implementada (reset de fase, sync de timer, wake lock); melhorias de UI pendentes
 - **Área:** Acompanhamento de partida
 - **Prioridade:** Média
 
@@ -92,3 +92,25 @@ Avanço automático de fases ou execução de efeitos não faz parte deste recur
 - `tests/Feature/DuelTurnTest.php`: testes focados existentes (22 no momento da revisão).
 - `app/Models/Duel.php`: estado persistido da partida; confirmar colunas/métodos antes de ampliar persistência.
 - `docs/tarefas/019-historico-unificado-de-eventos.md`: escopo relacionado, não incluído nesta tarefa.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- setPhase('BP') marca Battle como pressed e a faixa exibe BP BATTLE.
+- dvanceTurn move T02 -> T03 (R1 -> R2 em 2P) e a faixa não reseta para Draw: Battle permanece pressed após o avanço (bug confirmado; melhoria aprovada).
+- Faixa exibe TURNO 03 • Sua vez / Vez do Oponente; o nome do participante não aparece (melhoria aprovada Vez de [nome] não implementada).
+- Cronômetro inicia, conta regressiva (40:00 -> 39:57 em 2,5 s), pausa e persiste após reload (35:24 após reload).
+- Vibração persiste após reload (validado em 009).
+
+## Implementação aplicada - 2026-11-06 (Fase 1)
+
+- Bug corrigido: Duel::advanceTurn() agora reseta phase para Draw (DP) a cada troca de turno (testado em DuelTurnTest).
+- DuelArena::syncTimer() adicionado para ressincronizar o cronômetro do Alpine ao voltar do background (isibilitychange).
+- Wake Lock API tentada no WebView para manter a tela acesa durante o duelo; fallback documentado se não suportado.
+- Orientação mantida em portrait; registrada a vontade de suportar landscape (rotação) no futuro.
+
+### Melhorias do 018 deixadas para depois
+- Ocultar a faixa de fases por partida (toggle de UI).
+- Undo/Redo acessível com a faixa oculta.
+- "Vez de [nome]" no lugar de "Sua vez"/"Vez do Oponente" para 2 jogadores (mantido o atual por UX e testes; já funciona "Vez de [nome]" para 3+ jogadores).
+- Testes específicos para ressincronização do timer.

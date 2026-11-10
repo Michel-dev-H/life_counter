@@ -4,6 +4,14 @@
 - **Área:** Viabilidade técnica
 - **Prioridade:** Bloqueadora
 
+## Estado atual do código — 2026-11-06
+
+- `NATIVEPHP_ANDROID_SDK_LOCATION` está definido no `.env` (`C:/Users/MichelS/AppData/Local/Android/Sdk`) e `nativephp/android/local.properties` contém `sdk.dir` com o mesmo caminho. O bloqueio "SDK location not found" registrado nas primeiras tentativas não existe mais neste ambiente.
+- `nativephp/android/app/build/outputs/apk/debug/app-debug.apk` foi gerado em 2026-11-06 13:21 (≈179,76 MB). O `versionName` continua `DEBUG`, porque `NATIVEPHP_APP_VERSION` não está definido no `.env`; nesse modo o bundle é reextraído a cada cold start.
+- `vendor/bin/pest --compact`: **143 testes, 143 aprovados, 463 asserções**. A falha de `wallpaper__scrim` citada abaixo não existe mais; o estado real do scrim está na tarefa [027](./027-contraste-e-scrim-do-papel-de-parede.md).
+- `app/Models/Appearance.php` não existe mais (removido); a única implementação é `app/Appearance.php`.
+- `public/icon.png` e `public/splash.png` continuam ausentes, então o shell Android usa o texto "Loading…" e o build emite aviso de ícone ausente.
+
 ## Objetivo
 
 Confirmar que a aplicação Laravel existente pode ser empacotada com NativePHP para Android e que os fluxos essenciais funcionam sem internet.
@@ -36,6 +44,8 @@ Confirmar que a aplicação Laravel existente pode ser empacotada com NativePHP 
   $env:NATIVEPHP_ANDROID_SDK_LOCATION = "$env:LOCALAPPDATA\Android\Sdk"
   ```
 
+  Em 2026-11-06 a variável passou a estar no `.env` e o caminho foi gravado em `nativephp/android/local.properties`; não é mais necessário defini-la apenas no processo.
+
 - O aviso de SDK XML v4 foi observado na primeira compilação; não apareceu no output da compilação final.
 - A classe duplicada `App\Appearance` em `app/Models/Appearance.php` não tinha referências e estava fora do caminho PSR-4 esperado. O arquivo obsoleto foi removido para eliminar o aviso do Composer durante a geração do bundle.
 
@@ -60,8 +70,8 @@ Confirmar que a aplicação Laravel existente pode ser empacotada com NativePHP 
 
 ## Suíte automatizada
 
-- `php artisan test --compact`: **80 aprovados, 1 falha, 190 assertions**.
-- A única falha é `it_stores_an_uploaded_wallpaper_on_the_public_disk`, em [AppearanceTest](../../tests/Feature/AppearanceTest.php): a resposta não contém `wallpaper__scrim`. O upload e a gravação no disco passam; a expectativa do scrim continua pendente da implementação visual da tarefa [027](./027-contraste-e-scrim-do-papel-de-parede.md). Essa falha não invalida a prova offline, mas a suíte ainda não está verde.
+- `php artisan test --compact`: **80 aprovados, 1 falha, 190 assertions**. *(Resultado daquela execução; superado em 2026-11-06 por 143/143 — ver Estado atual.)*
+- A única falha é `it_stores_an_uploaded_wallpaper_on_the_public_disk`, em [AppearanceTest](../../tests/Feature/AppearanceTest.php): a resposta não contém `wallpaper__scrim`. O upload e a gravação no disco passam; a expectativa do scrim continua pendente da implementação visual da tarefa [027](./027-contraste-e-scrim-do-papel-de-parede.md). Essa falha não invalida a prova offline, mas a suíte ainda não está verde. *(Superado em 2026-11-06: o teste passa; ver tarefa 027 para o que ele realmente verifica.)*
 - O aviso PSR-4 de `App\Appearance` foi eliminado removendo a classe duplicada sem referências. O aviso de `sdk.dir` também foi eliminado no build final; o aviso de SDK XML só foi observado na primeira compilação.
 
 ## Bloqueios e próximos passos
@@ -153,3 +163,30 @@ php artisan native:screenshot android --device=emulator-5554 --out="$env:TEMP\li
 - O application ID inválido foi corrigido apenas para o processo/build de teste em uma execução anterior; não substituir `.env` nem divulgar seu conteúdo. Para inspecionar configuração, usar `php artisan config:show nativephp.app_id`, sem ler valores secretos do `.env`.
 - Sempre confirmar a conectividade antes e depois do teste offline, usar um duelo temporário identificado, guardar valor inicial e final e verificar o banco local. Restaurar Wi‑Fi/dados mesmo quando o teste falhar.
 - `native:status` comprova instalação/processo, não renderização correta. Captura visual, navegação e operação de domínio precisam de provas separadas.
+
+
+## Validação em dispositivo (moto g56 5G, ZF525FLTVF) - 2026-11-06
+
+- App instalado com.personal.lifecounter, ersionName=DEBUG, ersionCode=1, última atualização 2026-11-06 13:21.
+ative:devices reporta "No devices found" e
+ative:status reporta installed:false, mas db enxerga o aparelho; use db diretamente.
+- Cold start em DEBUG: bundle reextraído a cada inicialização. Primeiro conteúdo (web-commit) em ~13,8 s após o lançamento; telas de 19 KB (preta/splash) até ~10 s e 119 KB (conteúdo) a partir de 20 s.
+ativephp/android/app/build/outputs/apk/debug/app-debug.apk (~179,76 MB).
+- Offline: com Wi-Fi e dados móveis desativados, o app abriu a partir do bundle local e restaurou o estado do duelo #2 (8 jogadores, R1 T01) sem rede. A persistência de partida funciona offline.
+- APIs nativas: vibração e orientação não foram exercitadas além do toggle de vibração (validado em 009). Áudio e keep-awake permanecem sem API no NativePHP 4.7.
+
+## Correção de cold start - 2026-11-06
+
+- Definido NATIVEPHP_APP_VERSION=1.0.0 no .env (antes ausente, modo DEBUG).
+- Com o bundle já extraído, shouldExtract=false e o persistent runtime boota em ~550 ms.
+- Cold start caiu de ~13,8 s (extração a cada inicialização) para ~1,4 s (first content).
+- Após a mudança, foi necessário limpar os dados do app (pm clear) para forçar uma extração limpa com a versão 1.0.0; extrações subsequentes são instantâneas.
+- Build debug regerado (pp-debug.apk) e validado no moto g56 5G.
+
+## Revalidação em dispositivo - 2026-11-09
+
+- Build debug reinstalado no moto g56 5G (ZF525FLTVF) com `php artisan native:run android ZF525FLTVF --fresh`.
+- `pm clear` + `am start` resultou em `LaunchState: COLD`, `TotalTime` ~1,0-1,1 s (bundle já extraído com `NATIVEPHP_APP_VERSION=1.0.0`).
+- Após remover os componentes Livewire aninhados da arena, as ações `wire:click` passaram a funcionar no WebView: controles de PV, identidade, expansão/ordenação, fases, turno, undo/redo e vibração. Detalhes nas tarefas 012-014, 017 e 032.
+- Ferramentas de mesa (moeda, dados, lembretes) operam via endpoints JSON (`DuelToolsController`) e foram validadas no aparelho.
+- `native:devices`/`native:status` continuam imprecisos; `adb` segue sendo a fonte confiável.

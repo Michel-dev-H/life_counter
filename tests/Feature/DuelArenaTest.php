@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DuelPhase;
 use App\Livewire\DuelArena;
 use App\Livewire\DuelSetup;
 use App\Models\Duel;
@@ -131,6 +132,34 @@ it('renders the arena of an existing duel', function () {
         ->assertSee('Bruno')
         ->assertSee('8000')
         ->assertSee('Vibração desativada');
+});
+
+it('draws a first player from the current duel and shows the auxiliary result', function () {
+    $duel = Duel::startWith([['name' => 'Ana'], ['name' => 'Bruno']]);
+
+    $arena = Livewire::test(DuelArena::class, ['duel' => $duel])
+        ->call('drawFirstPlayer');
+
+    $drawn = $arena->get('firstPlayerDrawn');
+
+    expect($drawn)->toBeIn(['Ana', 'Bruno'])
+        ->and($duel->fresh()->turn)->toBe(1)
+        ->and($duel->fresh()->phase)->toBe(DuelPhase::Draw);
+
+    $arena->assertSee($drawn.'</span> começa', false)
+        ->assertSee('O sorteio é apenas um auxílio');
+});
+
+it('draws a first player only from a duel with many seats', function () {
+    $names = ['Ana', 'Bruno', 'Caio', 'Dora', 'Edu', 'Fabi', 'Gil', 'Hugo'];
+
+    $duel = Duel::startWith(array_map(fn (string $name) => ['name' => $name], $names));
+    Duel::startWith([['name' => 'Zoe']]);
+
+    $arena = Livewire::test(DuelArena::class, ['duel' => $duel])
+        ->call('drawFirstPlayer');
+
+    expect($arena->get('firstPlayerDrawn'))->toBeIn($names);
 });
 
 it('places the opponent above the home player and lets their panel rotate', function () {

@@ -106,3 +106,11 @@ Expandir temporariamente um painel, reordenar posições e configurar orientaç�
 - Testes focados da validação final: `php artisan test --compact tests\Feature\DuelArenaTest.php tests\Feature\DuelTurnTest.php` — 78 testes/280 assertions.
 - Browser: 390×844, 844×390 e 1280×800; layouts de 1–8, overflow, alvos ≥44 px, acentos e contraste; no Android NativePHP apenas a partida 2P foi comprovada. A primeira tela do emulador levou ~30 s para sair de “Loading”; isso é evidência da tarefa 003, não um bloqueio funcional do layout.
 - O percurso histórico incluiu binding Alpine inválido, faixa de turno duplicada em 1P/3P e uma interação de QA que criou evento de restauração sem alteração; cada incidente foi corrigido/isolado e não deve ser confundido com falha atual sem reproduzir.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Tela de configuração carrega com 1 a 8 jogadores, presets 8000/4000/16000/custom, seletores de ícone e botão INICIAR ARENA DE DUELO.
+- Navegação Nova partida -> /duel/new confirmada.
+- Criado duelo com 8 jogadores (Duelo #2) no aparelho; todos os 8 painéis renderizam com botão Expandir; expansão responde ao toque.
+- Paisagem 2P e legibilidade de 5-8 jogadores não foram exercitadas visualmente (este modelo não vê screenshots); validar manualmente.

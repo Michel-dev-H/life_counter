@@ -1,6 +1,6 @@
 # 020 — Salvamento e recuperação de partida
 
-- **Status:** Pendente
+- **Status:** Parcial - retomada funciona via Partidas recentes; confirmação ao iniciar nova partida com sessão ativa pendente
 - **Área:** Persistência
 - **Prioridade:** Bloqueadora
 
@@ -23,3 +23,10 @@ Salvar automaticamente o estado local da partida e permitir retomá-la após fec
 - [ ] Nova partida não sobrescreve sessão recuperável sem confirmação.
 - [ ] Falhas de leitura/gravação são informadas; não há fallback silencioso para sucesso.
 - [ ] Testes cobrem gravação, leitura e recuperação de estado.
+
+
+## Implementação aplicada - 2026-11-06 (Fase 4)
+
+- Retomada funciona via "Partidas recentes" na home (já existia).
+- Validado offline no dispositivo (cold start + resume).
+- Confirmação ao iniciar nova partida com sessão ativa: pendente.

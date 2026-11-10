@@ -73,3 +73,9 @@ O contraste global do papel de parede e seu scrim permanecem no escopo da tarefa
 - Reexecução focada: `php artisan test --compact tests\Feature\DuelSetupTest.php tests\Feature\DuelArenaTest.php` — 38 passaram. Suíte: `php artisan test --compact` — 96 passaram.
 - Verificações registradas: PHPStan nos quatro arquivos PHP citados (sem erros), `npm run build` (passou) e inspeção browser dos controles em largura móvel e dos três temas. Não há validação NativePHP registrada para essa implementação.
 - Essa lista identifica as superfícies do recurso; não usar o checklist como afirmação de que todas as versões do arquivo foram editadas exclusivamente na tarefa 006.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Modal de identidade abre com nome, cor e ícone; Salvar persiste o nome (testado Michel -> MichelX -> Michel) e o painel atualiza.
+- Cancelar fecha sem alterar.

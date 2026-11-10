@@ -237,3 +237,29 @@ body[data-theme="minimal-arena"] {
         animation: none;
     }
 }
+
+/* Wallpaper scrim: camada de contraste sobre o papel de parede. */
+.wallpaper__scrim {
+    position: relative;
+}
+
+.wallpaper__scrim::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: rgba(0, 0, 0, var(--wallpaper-scrim-opacity, 0.45));
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+body.wallpaper__scrim > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Opacidade padrão do scrim (configurável pelo usuário). */
+:root {
+    --wallpaper-scrim-opacity: 0.45;
+}

@@ -13,6 +13,8 @@ class Appearance
 
     private const WALLPAPER_KEY = 'appearance.wallpaper';
 
+    private const SCRIM_OPACITY_KEY = 'appearance.scrim_opacity';
+
     private const WALLPAPER_DIRECTORY = 'wallpapers';
 
     public function theme(): Theme
@@ -41,6 +43,22 @@ class Appearance
         $path = $this->wallpaperPath();
 
         return $path === null ? null : Storage::disk('public')->url($path);
+    }
+
+    public function scrimOpacity(): float
+    {
+        $value = Setting::read(self::SCRIM_OPACITY_KEY);
+
+        if ($value === null) {
+            return 0.45;
+        }
+
+        return max(0.0, min(0.8, (float) $value));
+    }
+
+    public function setScrimOpacity(float $value): void
+    {
+        Setting::write(self::SCRIM_OPACITY_KEY, (string) max(0.0, min(0.8, $value)));
     }
 
     public function storeWallpaper(UploadedFile $file): void

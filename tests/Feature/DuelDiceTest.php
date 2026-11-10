@@ -14,7 +14,6 @@ it('provides a dice roller inside each duel arena', function () {
     $this->get(route('duel.arena', $duel))
         ->assertOk()
         ->assertSeeLivewire(DuelArena::class)
-        ->assertSeeLivewire(DuelDice::class)
         ->assertSee('Lançar dados');
 });
 

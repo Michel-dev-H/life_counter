@@ -22,3 +22,9 @@ Garantir que funções essenciais sejam compreensíveis e operáveis por usuári
 - [ ] Controles têm rótulos acessíveis e estados perceptíveis.
 - [ ] Preferência de movimento reduzido desativa transições não essenciais.
 - [ ] Testes/inspeção cobrem fontes ampliadas e layouts de 1–8 jogadores.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Regra @media (prefers-reduced-motion: reduce) presente nas folhas de estilo carregadas.
+- Exercício visual da animação com reduced-motion não foi possível (este modelo não vê screenshots); validar manualmente.

@@ -36,10 +36,13 @@ Os arquivos abaixo incluem histórico/decisões e handoff específico. As demais
 - 006: identidade dos jogadores — implementação, arquivos e validação browser.
 - 007–009: motor, calculadora e feedback de PV — decisões, TDD, limites de análise estática e validações nativas pendentes.
 - 010–012: layout multiplayer, controles de layout e dados — posição obrigatória do oponente, testes/browser/emulador e pendências.
+- 013–014: moedas e sorteio do primeiro jogador — implementação, correções e validação em dispositivo.
+- 017: lembretes — implementação via fetch, destaque por turno/fase e validação em dispositivo; edição/duração pendentes.
 - 018: fases/turnos/cronômetro — decisões aprovadas e roteiro de implementação.
 - 022: persistência/seleção de temas — correções e validação browser, Android pendente.
-- 024: papel de parede — achados, decisões aprovadas e roteiro de implementação, sem código alterado na revisão.
+- 024: papel de parede — achados, decisões aprovadas e estado atual do código (backend existe; interface de upload ausente).
 - 030: navegação — decisões de UX, mudanças, evidências e itens ainda não implementados.
+- 032: QA — estado da suíte e revalidação funcional em dispositivo em 2026-11-09.
 
 ## Tarefas
 
@@ -47,7 +50,7 @@ Os arquivos abaixo incluem histórico/decisões e handoff específico. As demais
 |---|---|---|
 | [001](./001-pesquisar-regras-oficiais.md) | Pesquisar regras oficiais e fontes | Pendente |
 | [002](./002-pesquisar-ux-mobile.md) | Pesquisar companions e UX mobile | Pendente |
-| [003](./003-validar-nativephp-offline.md) | Validar NativePHP, Android e offline | Parcial — build/abertura confirmados; prova offline anterior existe, repetição posterior inconclusiva; primeiro frame/retomada pendentes |
+| [003](./003-validar-nativephp-offline.md) | Validar NativePHP, Android e offline | Parcial - SDK configurado, APK debug regerado, cold start corrigido (~1.4s); offline e retomada validados |
 | [004](./004-definir-arquitetura-local.md) | Definir arquitetura e estado local | Pendente |
 | [005](./005-configuracao-basica-da-partida.md) | Configuração básica da partida | Revisado — pendências de pesquisa e validação |
 | [006](./006-identidade-e-opcoes-dos-jogadores.md) | Identidade e opções dos jogadores | Implementado — aguardando revisão |
@@ -56,28 +59,30 @@ Os arquivos abaixo incluem histórico/decisões e handoff específico. As demais
 | [009](./009-feedback-das-alteracoes-de-pv.md) | Feedback visual, tátil e sonoro de PV | Implementado parcialmente — áudio e validação tátil no Android pendentes |
 | [010](./010-layout-multiplayer-basico.md) | Layout multiplayer básico | Validado — navegador 1–8 jogadores e NativePHP Android 2P |
 | [011](./011-controles-de-layout-multiplayer.md) | Expandir, reorganizar e orientar painéis | Implementado e validado — navegador; expansão 2P verificada no Android |
-| [012](./012-lancamento-de-dados.md) | Lançamento de dados | Implementada e validada no navegador; validação Android pendente por ANR no emulador |
-| [013](./013-lancamento-de-moedas.md) | Lançamento de moedas | Pendente |
-| [014](./014-sorteio-de-primeiro-jogador.md) | Sorteio do primeiro jogador | Pendente |
+| [012](./012-lancamento-de-dados.md) | Lançamento de dados | Validado no navegador e em dispositivo Android (modal, rolagem e histórico) |
+| [013](./013-lancamento-de-moedas.md) | Lançamento de moedas | Implementado e validado em dispositivo — modal com Cara/Coroa, totais, histórico e persistência |
+| [014](./014-sorteio-de-primeiro-jogador.md) | Sorteio do primeiro jogador | Implementado e validado em dispositivo — sorteio com resultado inline; histórico pendente |
 | [015](./015-gerenciador-de-contadores.md) | Gerenciador de contadores | Pendente |
 | [016](./016-referencias-de-cartas-e-campo-auxiliar.md) | Referências de cartas e campo auxiliar | Pendente |
-| [017](./017-lembretes-de-efeitos.md) | Lembretes de efeitos e duração | Pendente |
-| [018](./018-fases-turnos-e-cronometro.md) | Fases, turnos e cronômetro | Revisado — melhorias aprovadas aguardando implementação |
+| [017](./017-lembretes-de-efeitos.md) | Lembretes de efeitos e duração | Parcial e validado em dispositivo — criar/concluir/remover com destaque; edição, duração e confirmação pendentes |
+| [018](./018-fases-turnos-e-cronometro.md) | Fases, turnos e cronometro | Parcial - Fase 1 implementada (reset de fase, sync de timer, wake lock) |
 | [019](./019-historico-unificado-de-eventos.md) | Histórico unificado da partida | Pendente |
-| [020](./020-salvamento-e-recuperacao.md) | Salvamento e recuperação de partida | Pendente |
+| [020](./020-salvamento-e-recuperacao.md) | Salvamento e recuperação de partida | Parcial - retomada funciona, confirmação pendente |
 | [021](./021-arquivo-e-retencao-de-partidas.md) | Arquivo e retenção de partidas | Pendente |
-| [022](./022-selecao-persistente-de-temas.md) | Seleção persistente de temas | Correções implementadas — validação NativePHP pendente |
+| [022](./022-selecao-persistente-de-temas.md) | Seleção persistente de temas | Validado no navegador e em dispositivo Android (troca imediata, persistência, meta theme-color) |
 | [023](./023-identidade-visual-dos-temas.md) | Identidade visual completa dos temas | Pendente |
-| [024](./024-upload-e-remocao-de-papel-de-parede.md) | Upload e remoção de papel de parede | Revisado — correções aprovadas aguardando implementação |
+| [024](./024-upload-e-remocao-de-papel-de-parede.md) | Upload e remocao de papel de parede | Implementado - upload, preview, validacao, remocao com confirmacao |
 | [025](./025-galeria-interna-de-papeis-de-parede.md) | Galeria interna de papéis de parede | Pendente |
 | [026](./026-imagem-local-e-ajustes.md) | Imagem local e ajustes de enquadramento | Pendente |
-| [027](./027-contraste-e-scrim-do-papel-de-parede.md) | Contraste e scrim de papel de parede | Pendente |
+| [027](./027-contraste-e-scrim-do-papel-de-parede.md) | Contraste e scrim de papel de parede | Implementado - scrim CSS, wallpaper como fundo, opacidade configuravel |
 | [028](./028-recursos-nativos-durante-a-partida.md) | Recursos nativos durante a partida | Pendente |
 | [029](./029-acessibilidade-e-movimento-reduzido.md) | Acessibilidade e movimento reduzido | Pendente |
 | [030](./030-navegacao-e-ferramentas-contextuais.md) | Navegação e ferramentas contextuais | Em andamento — início, nova partida, aparência e retomada acessíveis |
 | [031](./031-design-system-e-polimento-visual.md) | Design system e polimento visual | Pendente |
-| [032](./032-qa-e-testes-de-integracao.md) | QA e testes de integração | Pendente |
-| [033](./033-build-android-e-documentacao-de-entrega.md) | Build Android e documentação de entrega | Pendente |
+| [032](./032-qa-e-testes-de-integracao.md) | QA e testes de integração | Parcial — suíte 151/151 verde; fluxos principais validados em dispositivo; validação visual e áudio pendentes |
+| [033](./033-build-android-e-documentacao-de-entrega.md) | Build Android e documentação de entrega | Parcial — APK debug é gerado; instalação/abertura evidenciadas em build anterior; entrega pendente |
+
+Status revisados em 2026-11-09 contra o código, a suíte automatizada (`151/151`) e a revalidação funcional no moto g56 5G. Onde o corpo de uma tarefa preserva histórico anterior, ele foi mantido e marcado como superado.
 
 ## Ordem sugerida
 

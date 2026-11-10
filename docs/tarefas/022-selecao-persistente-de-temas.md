@@ -4,6 +4,13 @@
 - **Área:** Aparência
 - **Prioridade:** Média
 
+## Correção de estado — 2026-11-06
+
+- A falha do teste de `wallpaper__scrim` registrada abaixo não existe mais: `vendor/bin/pest --compact` → **143/143, 463 asserções**, e `AppearanceTest.php` passa 10/10.
+- O listener `theme-updated` está carregado (`resources/views/livewire/appearance-settings.blade.php`, `x-on:theme-updated.window`), `Appearance::selectTheme()` é usado na gravação e a meta `theme-color` é dinâmica. Os trechos de "Resultado da revisão" que descrevem o contrário são históricos, anteriores à correção.
+- Continua pendente apenas a validação em build NativePHP Android.
+- O estado real do papel de parede (upload, remoção e renderização) está nas tarefas [024](./024-upload-e-remocao-de-papel-de-parede.md) e [027](./027-contraste-e-scrim-do-papel-de-parede.md).
+
 ## Implementado no repositório
 
 - Enum com Holographic, Shadow Realm e Minimal Arena.
@@ -21,7 +28,7 @@
 
 A diferenciação visual completa entre os três temas é escopo da tarefa 023.
 
-## Resultado da revisão
+## Resultado da revisão — histórico (anterior às correções)
 
 - Teste focado executado: `php artisan test --compact tests\Feature\AppearanceTest.php --filter="lets the user pick a theme and persists it"` — 1 teste passou, 4 assertions.
 - A escolha do tema é validada pelo enum e persistida em `settings`; `Appearance::theme()` fornece fallback para Holographic quando o valor salvo é ausente ou inválido.
@@ -52,7 +59,7 @@ A diferenciação visual completa entre os três temas é escopo da tarefa 023.
 
 - `php artisan test --compact tests\Feature\AppearanceTest.php --filter=theme` — 6 testes passaram.
 - A seleção de Shadow Realm atualizou `data-theme` e `theme-color` sem recarregar a página; a preferência anterior foi restaurada após a verificação.
-- A suíte completa de `AppearanceTest.php` continua com a falha preexistente do elemento `wallpaper__scrim`, registrada na tarefa 027.
+- A suíte completa de `AppearanceTest.php` continua com a falha preexistente do elemento `wallpaper__scrim`, registrada na tarefa 027. *(Superado em 2026-11-06: `AppearanceTest.php` passa 10/10.)*
 
 **Conclusão:** aplicação imediata, cor da barra do navegador e persistência via serviço foram implementadas, cobertas por testes e verificadas no navegador. A validação NativePHP permanece pendente.
 
@@ -79,11 +86,16 @@ A diferenciação visual completa entre os três temas é escopo da tarefa 023.
 
 - Validar persistência local e troca de tema em build NativePHP Android.
 - Conferir contraste/estado de todos os recursos ao alternar temas no âmbito das tarefas 023 e 027.
-- A falha do teste do scrim (`wallpaper__scrim`) é registrada na tarefa 027, não é uma falha da persistência de tema.
+- A falha do teste do scrim (`wallpaper__scrim`) é registrada na tarefa 027, não é uma falha da persistência de tema. *(Superado em 2026-11-06: não há falha; ver Estado atual.)*
 
 ### Superfícies e reprodução
 
 - Persistência/seleção: `app/Livewire/AppearanceSettings.php` e serviço `app/Appearance.php`; shell/metadata: `resources/views/layouts/app.blade.php`; UI: `resources/views/livewire/appearance-settings.blade.php`.
 - Testes: `tests/Feature/AppearanceTest.php`. Comando após a correção: `php artisan test --compact tests\Feature\AppearanceTest.php --filter=theme` — 6 passaram.
-- Browser confirmou a seleção de Shadow Realm sem reload, atualização de `data-theme` e `theme-color`; preferência anterior restaurada após a verificação. O teste completo continua com uma falha de `wallpaper__scrim`, atribuída à tarefa 027, não ao tema.
+- Browser confirmou a seleção de Shadow Realm sem reload, atualização de `data-theme` e `theme-color`; preferência anterior restaurada após a verificação. O teste completo continua com uma falha de `wallpaper__scrim`, atribuída à tarefa 027, não ao tema. *(Superado em 2026-11-06: não há falha; `AppearanceTest.php` passa 10/10.)*
 - Build NativePHP/Android, persistência offline e contraste integral dos recursos não foram validados nesta tarefa.
+
+## Tentativa de revalidação em dispositivo - 2026-11-10
+
+- A troca de tema foi acionada no aparelho (ADB/CDP), mas a conexão com o dispositivo caiu antes de registrar o estado após o reload.
+- Sem nova evidência, a validação em dispositivo desta tarefa permanece a registrada anteriormente; não marcar como revalidada nesta rodada.

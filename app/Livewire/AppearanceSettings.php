@@ -21,16 +21,16 @@ class AppearanceSettings extends Component
 
     public ?UploadedFile $wallpaper = null;
 
-    public ?string $wallpaperBase64 = null;
+    public ?string $wallpaperPreview = null;
 
-    protected $listeners = [
-        'setWallpaper',
-        'removeWallpaper',
-    ];
+    public bool $showRemoveConfirm = false;
+
+    public float $scrimOpacity = 0.45;
 
     public function mount(): void
     {
         $this->selectedTheme = app(Appearance::class)->theme()->value;
+        $this->scrimOpacity = app(Appearance::class)->scrimOpacity();
     }
 
     public function render(): View
@@ -70,6 +70,56 @@ class AppearanceSettings extends Component
         );
     }
 
+    public function updatedWallpaper(): void
+    {
+        $this->resetErrorBag('wallpaper');
+
+        if ($this->wallpaper === null) {
+            $this->wallpaperPreview = null;
+
+            return;
+        }
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (! in_array($this->wallpaper->getMimeType(), $allowedMimeTypes)) {
+            $this->addError('wallpaper', 'Tipo de arquivo inválido. Apenas JPEG, PNG ou WebP.');
+            $this->wallpaper = null;
+            $this->wallpaperPreview = null;
+
+            return;
+        }
+
+        if ($this->wallpaper->getSize() > 2 * 1024 * 1024) {
+            $this->addError('wallpaper', 'Imagem muito grande. Limite: 2 MB.');
+            $this->wallpaper = null;
+            $this->wallpaperPreview = null;
+
+            return;
+        }
+
+        $dimensions = @getimagesize($this->wallpaper->getRealPath());
+
+        if ($dimensions === false) {
+            $this->addError('wallpaper', 'Não foi possível ler a imagem.');
+            $this->wallpaper = null;
+            $this->wallpaperPreview = null;
+
+            return;
+        }
+
+        [$width, $height] = $dimensions;
+
+        if ($width > 4096 || $height > 4096) {
+            $this->addError('wallpaper', 'Imagem muito grande. Limite: 4096×4096 px.');
+            $this->wallpaper = null;
+            $this->wallpaperPreview = null;
+
+            return;
+        }
+
+        $this->wallpaperPreview = $this->wallpaper->temporaryUrl();
+    }
+
     public function saveWallpaper(): void
     {
         if ($this->wallpaper === null || ! $this->wallpaper->isValid()) {
@@ -78,24 +128,30 @@ class AppearanceSettings extends Component
             return;
         }
 
-        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (! in_array($this->wallpaper->getMimeType(), $allowedMimeTypes)) {
-            $this->addError('wallpaper', 'Tipo de arquivo inválido. Apenas imagens são permitidas.');
+        app(Appearance::class)->storeWallpaper($this->wallpaper);
 
-            return;
-        }
+        $this->wallpaper = null;
+        $this->wallpaperPreview = null;
+        $this->resetErrorBag('wallpaper');
 
-        // Remove previous wallpaper if exists
-        app(Appearance::class)->removeWallpaper();
+        $this->dispatch('wallpaper-updated');
+    }
 
-        $path = $this->wallpaper->store('wallpapers', 'public');
-        $this->wallpaperBase64 = null;
+    public function cancelWallpaper(): void
+    {
+        $this->wallpaper = null;
+        $this->wallpaperPreview = null;
+        $this->resetErrorBag('wallpaper');
+    }
 
-        if ($path) {
-            Setting::write('appearance.wallpaper', $path);
-        }
+    public function confirmRemoveWallpaper(): void
+    {
+        $this->showRemoveConfirm = true;
+    }
 
-        $this->dispatch('save-wallpaper', base64: null);
+    public function cancelRemoveWallpaper(): void
+    {
+        $this->showRemoveConfirm = false;
     }
 
     public function removeWallpaper(): void
@@ -103,6 +159,12 @@ class AppearanceSettings extends Component
         app(Appearance::class)->removeWallpaper();
 
         $this->wallpaper = null;
-        $this->wallpaperBase64 = null;
+        $this->wallpaperPreview = null;
+        $this->showRemoveConfirm = false;
+    }
+
+    public function updatedScrimOpacity(): void
+    {
+        app(Appearance::class)->setScrimOpacity($this->scrimOpacity);
     }
 }

@@ -1,6 +1,6 @@
 # 012 — Lançamento de dados
 
-- **Status:** Implementada e validada no navegador; validação Android pendente por ANR no emulador
+- **Status:** Implementado e validado no navegador e em dispositivo Android — modal de dados via fetch; componente DuelDice permanece coberto por testes
 - **Área:** Sorteios
 - **Prioridade:** Média
 
@@ -54,8 +54,8 @@ Oferecer lançamento rápido de um ou vários dados tradicionais de seis faces.
 
 ### O que falta
 
-- Repetir a validação do lançador dentro da arena em Android quando o emulador estiver responsivo. O build compilou, mas ocorreram ANRs antes de se alcançar a arena; o fluxo Android permanece pendente.
-- Não marcar a tarefa como integralmente validada em dispositivo até essa etapa ser concluída.
+- *(Superado em 2026-11-09: a validação do lançador na arena foi repetida no aparelho físico e passou; ver seção de atualização no fim do arquivo.)* Repetir a validação do lançador dentro da arena em Android quando o emulador estiver responsivo. O build compilou, mas ocorreram ANRs antes de se alcançar a arena; o fluxo Android permaneceu pendente naquela rodada.
+- *(Superado em 2026-11-09.)* Não marcar a tarefa como integralmente validada em dispositivo até essa etapa ser concluída.
 
 ### Superfícies, comandos e limite da evidência Android
 
@@ -64,3 +64,17 @@ Oferecer lançamento rápido de um ou vários dados tradicionais de seis faces.
 - Verificações registradas: PHPStan focado, Pint, `npm run build` e `git diff --check` passaram. Browser: 320×720, 390×844 e 1440×844, incluindo rolamento/repetição/soma/histórico; não houve overflow horizontal.
 - Android: houve build debug, instalação e abertura da tela inicial/configuração, mas ocorreram ANRs antes de chegar à arena. Portanto nem o lançador nem a migração/uso da tabela foram aceitos no dispositivo Android.
 - Histórico manual foi testado em duelo temporário `DiceQA` ID 15 e removido após confirmação; não usar partidas reais. O AVD era `emulator-5554`; comandos NativePHP/ADB e dependências do SDK estão detalhados na tarefa 003.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Modal Lançar dados abre, rola 1 a 5 dados, mostra soma e histórico (até 10 lançamentos) com timestamp.
+- Funciona offline.
+
+## Atualização e validação em dispositivo - 2026-11-09
+
+- O modal exibido na arena passou a ser HTML/JS simples dentro de `duel-arena.blade.php`, com `fetch` para `POST /duel/{duel}/dice-roll` e `GET /duel/{duel}/dice-rolls` (implementados em `DuelToolsController`).
+- O contador é limitado no servidor a 1–10; os resultados usam `random_int(1, 6)` e ficam persistidos em `dice_rolls`.
+- O componente `DuelDice` e `tests/Feature/DuelDiceTest.php` continuam no repositório cobrindo a implementação Livewire, embora a arena use o modal via fetch.
+- Validação no moto g56 5G (ZF525FLTVF), após a remoção dos componentes Livewire aninhados: abrir modal, rolar, ver soma/valores e histórico persistido (ex.: "Soma: 4 — 4" e "1 dado(s): 4 = 4"). Sem erros no `browser.log`.
+- A pendência de ANR no emulador registrada em 2026-11-06 não se reproduziu no aparelho físico.

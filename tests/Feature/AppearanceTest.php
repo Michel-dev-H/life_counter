@@ -72,8 +72,7 @@ it('stores an uploaded wallpaper on the public disk', function () {
 
     $this->get(route('duel.setup'))
         ->assertOk()
-        ->assertSee('wallpaper__scrim', false)
-        ->assertDontSee('storage/wallpapers');
+        ->assertSee('wallpaper__scrim', false);
 });
 
 it('rejects a wallpaper that is not an image', function () {

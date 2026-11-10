@@ -63,3 +63,10 @@ Organizar os fluxos de início, partida e ferramentas para manter ações freque
 - Antes da última correção no meta `theme-color`, a suíte completa foi 84 aprovada/1 falha; a falha era `it_lets_the_user_pick_a_theme_and_persists_it`. O layout foi então corrigido para refletir `Theme::browserColor()`, mas não há evidência no checkpoint de que a suíte completa tenha sido rerodada depois.
 - Não há registro de inspeção visual final da navegação em browser após a mudança; não declarar UX visual como validada com base apenas nos testes de feature/build.
 - O dashboard consulta até cinco duelos recentes com `with('duelPlayers:id,duel_id,name,seat')`, ordenados por data e ID; o menu compartilhado só aparece fora da arena. No fluxo de QA, preservar partidas existentes e não inventar destinos para histórico/ferramentas ainda ausentes.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Navegação Nova partida -> /duel/new ("Configuração de Duelo") confirmada.
+- Arena /duel/1 carrega com painéis, ferramentas (calculadora, dados, expansão) e histórico.
+- Histórico/arquivo e retorno das ferramentas sem perder estado não foram exercitados nesta rodada.

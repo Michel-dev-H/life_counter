@@ -65,3 +65,11 @@ Melhorar o uso dos painéis multiplayer em telas pequenas e permitir que os joga
 - Comando focado registrado: `php artisan test --compact tests\Feature\DuelArenaTest.php tests\Feature\DuelTurnTest.php` — 78 testes passaram antes da correção final da faixa duplicada da tarefa 010; a correção foi então coberta pelo teste de regressão de 1 e 3 jogadores. Não usar a contagem de 78 como prova de que a correção posterior foi incluída naquele run.
 - Browser: 1–8 em 390×844, 844×390 e 1280×800, sem overflow horizontal; alvos dos controles ≥44 px. Android NativePHP cobriu apenas expansão/recolhimento 2P, mantendo rotação e PV.
 - Duelos de QA `LayoutQA` IDs 7–14 foram criados para a matriz 1–8 e removidos após a validação; nenhum duelo real deve ser limpo como parte da repetição.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Tela de configuração carrega com 1 a 8 jogadores, presets 8000/4000/16000/custom, seletores de ícone e botão INICIAR ARENA DE DUELO.
+- Navegação Nova partida -> /duel/new confirmada.
+- Criado duelo com 8 jogadores (Duelo #2) no aparelho; todos os 8 painéis renderizam com botão Expandir; expansão responde ao toque.
+- Paisagem 2P e legibilidade de 5-8 jogadores não foram exercitadas visualmente (este modelo não vê screenshots); validar manualmente.

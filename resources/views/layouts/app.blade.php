@@ -5,12 +5,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="theme-color" content="{{ app(Appearance::class)->theme()->browserColor() }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ $title ?? config('app.name') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         {{ Vite::fonts() }}
         @livewireStyles
     </head>
-    <body class="min-h-dvh bg-surface font-sans text-on-surface antialiased selection:bg-primary-container selection:text-on-primary <?= app(Appearance::class)->wallpaperPath() ? ' wallpaper__scrim' : '' ?>" data-theme="{{ app(Appearance::class)->theme()->value }}">
+    <body class="min-h-dvh bg-surface font-sans text-on-surface antialiased selection:bg-primary-container selection:text-on-primary <?= app(Appearance::class)->wallpaperPath() ? ' wallpaper__scrim' : '' ?>" data-theme="{{ app(Appearance::class)->theme()->value }}" style="<?= app(Appearance::class)->wallpaperPath() ? '--wallpaper-scrim-opacity: ' . app(Appearance::class)->scrimOpacity() . '; background-image: url(' . app(Appearance::class)->wallpaperUrl() . '); background-size: cover; background-position: center; background-attachment: fixed;' : '' ?>">
         @if (request()->routeIs('duel.arena'))
             {{ $slot }}
         @else

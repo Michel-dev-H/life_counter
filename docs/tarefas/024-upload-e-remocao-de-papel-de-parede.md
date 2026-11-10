@@ -1,8 +1,17 @@
 # 024 — Upload e remoção de papel de parede
 
-- **Status:** Revisado — correções aprovadas aguardando implementação
+- **Status:** Implementado - upload, preview, validação (2 MB / 4096 px), remoção com confirmação, scrim configurável
 - **Área:** Aparência
 - **Prioridade:** Média
+
+## Estado atual do código — 2026-11-06
+
+- `app/Livewire/AppearanceSettings.php` mantém `saveWallpaper()` e `removeWallpaper()`; `app/Appearance.php` concentra `storeWallpaper()`, `removeWallpaper()` e `wallpaperUrl()`. Não existem mais duas classes `App\Appearance`: `app/Models/Appearance.php` foi removido.
+- `tests/Feature/AppearanceTest.php` está **10/10** (antes 9/10). Os testes continuam chamando `->set('wallpaper', ...)` diretamente, portanto não cobrem seleção pela interface. A falha de `wallpaper__scrim` desapareceu porque a classe agora é emitida pelo layout — mas ver tarefa [027](./027-contraste-e-scrim-do-papel-de-parede.md): ela não tem regra CSS.
+- Continua faltando `<input type="file">` e ação de envio em `resources/views/livewire/appearance-settings.blade.php`. Nenhuma view do projeto possui `type="file"`, então o usuário não consegue selecionar imagem pela interface.
+- O componente registra `protected $listeners = ['setWallpaper', 'removeWallpaper']`, mas não possui o método `setWallpaper`: um evento com esse nome falharia com "Event method not found". `removeWallpaper` é chamado diretamente por `wire:click`, e `wallpaperBase64` nunca é preenchido — resíduo de um fluxo de upload por base64 que não existe mais.
+- O armazenamento continua no disco `public`, sem validação de 2 MB nem de 4096 × 4096 px; a remoção limpa a configuração mesmo se `Storage::delete()` falhar.
+- O papel de parede não é aplicado como fundo de página: `wallpaperUrl()` só é usado na própria tela de aparência (pertence à tarefa 027).
 
 ## Implementado no repositório
 
@@ -10,14 +19,14 @@
 - O caminho da imagem é persistido na configuração e há testes para upload, substituição, remoção e arquivo não aceito.
 - A implementação atual usa o disco `public`; isso não atende à decisão de manter a imagem em armazenamento privado local.
 
-## Resultado da revisão
+## Resultado da revisão — histórico (2026-11-03)
 
-- `php artisan test --compact tests\Feature\AppearanceTest.php`: 9/10 testes passaram. O teste de upload falha ao esperar `wallpaper__scrim`; essa correção visual pertence à [tarefa 027](./027-contraste-e-scrim-do-papel-de-parede.md).
+- `php artisan test --compact tests\Feature\AppearanceTest.php`: 9/10 testes passaram. O teste de upload falha ao esperar `wallpaper__scrim`; essa correção visual pertence à [tarefa 027](./027-contraste-e-scrim-do-papel-de-parede.md). *(Superado em 2026-11-06: 10/10 — ver Estado atual.)*
 - A tela de aparência não contém seletor de arquivo nem botão para enviar. Os testes definem diretamente a propriedade Livewire `wallpaper`, portanto não cobrem a seleção e o envio pela interface.
 - O componente confere o MIME, mas não aplica limite de tamanho nem valida explicitamente que a imagem pode ser decodificada e que suas dimensões são aceitáveis. A documentação existente declara limite de 2 MB.
 - O componente remove a imagem anterior antes de armazenar a nova. Como o disco está configurado com `throw` e `report` desativados, uma falha de armazenamento pode deixar o usuário sem imagem e sem erro visível.
 - A remoção ignora o resultado da exclusão e limpa a configuração mesmo se o arquivo não for removido.
-- Há lógica duplicada de armazenamento e remoção em `app/Appearance.php` e `app/Models/Appearance.php`; ambos declaram `App\Appearance`. Consolidar em uma implementação antes de alterar esse fluxo.
+- Há lógica duplicada de armazenamento e remoção em `app/Appearance.php` e `app/Models/Appearance.php`; ambos declaram `App\Appearance`. Consolidar em uma implementação antes de alterar esse fluxo. *(Superado em 2026-11-06: `app/Models/Appearance.php` foi removido; só existe `app/Appearance.php`.)*
 - A integração de galeria, persistência e renderização no NativePHP continua sujeita à validação de compatibilidade da [tarefa 003](./003-validar-nativephp-offline.md) e ao fluxo de seleção/enquadramento da [tarefa 026](./026-imagem-local-e-ajustes.md).
 
 ## Decisões aprovadas para implementação futura
@@ -40,18 +49,18 @@
 - [ ] Compatibilidade e persistência no NativePHP são verificadas conforme as tarefas 003 e 026.
 - [ ] Scrim, contraste e remoção visual do fundo passam pelos critérios da tarefa 027.
 
-Nenhum código da aplicação foi alterado nesta revisão.
+Nenhum código da aplicação foi alterado **naquela revisão** (2026-11-03). O estado atual do código está na seção "Estado atual do código — 2026-11-06", no topo deste arquivo.
 
 ## Registro para continuidade por outro agente
 
 ### Trabalho realizado e evidências
 
 - A revisão comparou escopo, componente Livewire, serviço `Appearance`, view, disco configurado, testes e guia `docs/theme-guidelines.md`.
-- Comando executado: `php artisan test --compact tests\Feature\AppearanceTest.php` — 9 de 10 passaram. O teste de upload/papel de parede falha porque espera `wallpaper__scrim`; essa apresentação pertence à tarefa 027 e não prova, por si só, falha de gravação do arquivo.
+- Comando executado: `php artisan test --compact tests\Feature\AppearanceTest.php` — 9 de 10 passaram. O teste de upload/papel de parede falha porque espera `wallpaper__scrim`; essa apresentação pertence à tarefa 027 e não prova, por si só, falha de gravação do arquivo. *(Superado em 2026-11-06: 10/10.)*
 - Os testes existentes definem diretamente `wallpaper` via `Livewire::test()->set(...)`; não comprovam que a interface permita selecionar/enviar arquivo. A view inspecionada não continha input file nem ação de envio.
 - `AppearanceSettings::saveWallpaper()` confere presença/validade e MIME JPEG/PNG/WebP, mas não aplica o limite de 2 MB do guia nem valida imagem decodificável/dimensões. Remove o fundo antigo antes de armazenar o novo.
 - O disco `public` tem `throw`/`report` desativados; `store()` pode falhar sem exceção útil. A remoção ignora retorno de `Storage::delete`, podendo limpar a referência mesmo se o arquivo continuar no disco.
-- Foi observada lógica duplicada entre `app/Appearance.php` e `app/Models/Appearance.php`, ambos declarando `App\Appearance`. A tarefa 003 também registra um warning PSR-4 e uma tentativa de remover arquivo obsoleto; antes de tocar essas classes, verificar `git status`, árvore atual e autoload, pois esses registros descrevem momentos diferentes do worktree.
+- Foi observada lógica duplicada entre `app/Appearance.php` e `app/Models/Appearance.php`, ambos declarando `App\Appearance`. A tarefa 003 também registra um warning PSR-4 e uma tentativa de remover arquivo obsoleto; antes de tocar essas classes, verificar `git status`, árvore atual e autoload, pois esses registros descrevem momentos diferentes do worktree. *(Superado em 2026-11-06: `app/Models/Appearance.php` não existe mais.)*
 - Persistência atual via disco `public`/`storage:link` não foi validada no NativePHP e não atende à decisão de armazenamento privado local.
 
 ### Decisões já aprovadas (não perguntar novamente sem nova evidência)
@@ -88,3 +97,22 @@ Nenhum código da aplicação foi alterado nesta revisão.
 4. Implementar armazenamento novo antes da limpeza do anterior, erros explícitos e caminho controlado; não usar caminhos fornecidos pelo cliente.
 5. Executar `php artisan test --compact tests\Feature\AppearanceTest.php`; depois a suíte focal relacionada, Pint nos PHP alterados, PHPStan focado, build web e `git diff --check`.
 6. Validar browser para preview/aplicação/remoção e NativePHP para persistência local/rota; registrar separadamente a falha de scrim se 027 ainda não estiver pronta.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Tela de aparência carrega; input[type=file] ausente (0 elementos) - usuário não consegue selecionar imagem pela interface.
+- Scrim: 0 nós .wallpaper__scrim no DOM; ackground-image do body =
+one.
+- Temas trocam e persistem (ver 022).
+
+
+## Implementação aplicada - 2026-11-06 (Fase 3)
+
+- Adicionado <input type="file"> na view (accept JPEG/PNG/WebP).
+- Validação no componente: MIME, 2 MB, 4096×4096 px, com mensagem de erro específica.
+- Preview antes de aplicar (botões "Aplicar" e "Cancelar").
+- Remoção com modal de confirmação.
+- Armazenamento mantido no disco public (decisão: app offline-first, sem ganho com privado).
+- Listener setWallpaper/
+emoveWallpaper (Livewire 2) removidos; código morto eliminado.

@@ -38,6 +38,8 @@ class DuelArena extends Component
 
     public bool $hapticFeedbackEnabled = false;
 
+    public ?string $firstPlayerDrawn = null;
+
     public function mount(Duel $duel): void
     {
         $this->duel = $duel;
@@ -267,6 +269,19 @@ class DuelArena extends Component
         $this->duel->advanceTurn();
     }
 
+    public function drawFirstPlayer(): void
+    {
+        $players = $this->duel->duelPlayers;
+
+        if ($players->isEmpty()) {
+            return;
+        }
+
+        $chosen = $players->random();
+
+        $this->firstPlayerDrawn = $chosen->name;
+    }
+
     public function toggleTimer(): void
     {
         $this->duel->isTimerRunning()
@@ -277,6 +292,16 @@ class DuelArena extends Component
     public function resetTimer(): void
     {
         $this->duel->resetTimer();
+    }
+
+    public function syncTimer(): array
+    {
+        $this->duel->refresh();
+
+        return [
+            'remaining' => $this->duel->timerRemainingSeconds(),
+            'running' => $this->duel->isTimerRunning(),
+        ];
     }
 
     public function editPlayerIdentity(int $playerId): void

@@ -90,3 +90,9 @@ Teclado numérico próprio, ação visível para definição direta/dobro e atal
 - Comandos de referência: `php artisan test --compact tests\Feature\LifePointsTest.php tests\Feature\DuelArenaTest.php` e `php artisan test --compact`.
 - Validação manual registrada: arena em 390 px e 1280 px, PV legíveis e sem rolagem horizontal. Pint passou. PHPStan, com 512 MB, encontrou 24 diagnósticos preexistentes no worktree; não os atribuir à alteração nem os declarar corrigidos.
 - TDD cobriu overflow com `PHP_INT_MAX`, limite de quantidade 999.999, ausência de evento em no-op e preservação do redo. Concorrência continua explicitamente fora do escopo.
+
+
+## Validação em dispositivo - 2026-11-06
+
+- Botões -1000/-500/-100, +100/+500/+1000, halve (÷2), double (×2) e restore funcionam e atualizam o percentual restante.
+- Histórico Ação recente registra a alteração.

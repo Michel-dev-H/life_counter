@@ -10,7 +10,7 @@ class DiceRoll extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['dice_count', 'results', 'total'];
+    protected $fillable = ['duel_id', 'dice_count', 'results', 'total'];
 
     protected function casts(): array
     {
