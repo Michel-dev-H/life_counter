@@ -1,6 +1,6 @@
 # 012 — Lançamento de dados
 
-- **Status:** Implementado e validado no navegador e em dispositivo Android — modal de dados via fetch; componente DuelDice permanece coberto por testes
+- **Status:** Implementado e validado no navegador e em dispositivo Android — modal de dados via fetch e endpoints JSON
 - **Área:** Sorteios
 - **Prioridade:** Média
 
@@ -26,7 +26,7 @@ Oferecer lançamento rápido de um ou vários dados tradicionais de seis faces.
 
 ## Validação
 
-- Testes focados: `tests/Feature/DuelDiceTest.php` — 10 testes e 51 assertions.
+- Testes focados: `tests/Feature/DuelToolsTest.php` cobre rolagem, limites, histórico, isolamento por duelo e intervalo 1–6.
 - Suíte completa: 143 testes e 463 assertions.
 - Build web, PHPStan focado, Pint e `git diff --check` concluídos sem erros.
 - Navegador: fluxo de dois dados, resultados, soma, repetição, histórico e ocultação da soma verificados em 320×720 e 390×844; também verificado em desktop a 1440×844. Sem overflow horizontal; ações empilhadas em telas estreitas.
@@ -59,11 +59,11 @@ Oferecer lançamento rápido de um ou vários dados tradicionais de seis faces.
 
 ### Superfícies, comandos e limite da evidência Android
 
-- Implementação: `app/Livewire/DuelDice.php`, `app/Models/DiceRoll.php`, relação em `app/Models/Duel.php`, migração `database/migrations/2026_11_04_101205_create_dice_rolls_table.php`, `resources/views/livewire/duel-dice.blade.php` e integração em `resources/views/livewire/duel-arena.blade.php`.
-- Testes: `tests/Feature/DuelDiceTest.php` (10 testes/51 assertions). Referência: `php artisan test --compact tests\Feature\DuelDiceTest.php`; suíte completa registrada em 143 testes/463 assertions.
-- Verificações registradas: PHPStan focado, Pint, `npm run build` e `git diff --check` passaram. Browser: 320×720, 390×844 e 1440×844, incluindo rolamento/repetição/soma/histórico; não houve overflow horizontal.
-- Android: houve build debug, instalação e abertura da tela inicial/configuração, mas ocorreram ANRs antes de chegar à arena. Portanto nem o lançador nem a migração/uso da tabela foram aceitos no dispositivo Android.
-- Histórico manual foi testado em duelo temporário `DiceQA` ID 15 e removido após confirmação; não usar partidas reais. O AVD era `emulator-5554`; comandos NativePHP/ADB e dependências do SDK estão detalhados na tarefa 003.
+- Implementação atual: modal em `resources/views/livewire/duel-arena.blade.php`, endpoints em `app/Http/Controllers/DuelToolsController.php`, rotas `duel.dice-roll`/`duel.dice-rolls`, modelo `app/Models/DiceRoll.php`, relação em `app/Models/Duel.php`, migração `database/migrations/2026_11_04_101205_create_dice_rolls_table.php`.
+- Testes: `tests/Feature/DuelToolsTest.php`. Referência: `php artisan test --compact tests\Feature\DuelToolsTest.php`.
+- Verificações registradas (rodada inicial): PHPStan focado, Pint, `npm run build` e `git diff --check` passaram. Browser: 320×720, 390×844 e 1440×844, sem overflow horizontal.
+- O componente Livewire `DuelDice` e seu teste/view foram removidos em 2026-11-10 por estarem sem uso após a migração para fetch.
+- Android (rodada inicial): houve build debug, instalação e abertura da tela inicial/configuração, mas ocorreram ANRs antes de chegar à arena. Superado pela validação em dispositivo de 2026-11-09.
 
 
 ## Validação em dispositivo - 2026-11-06
@@ -75,6 +75,7 @@ Oferecer lançamento rápido de um ou vários dados tradicionais de seis faces.
 
 - O modal exibido na arena passou a ser HTML/JS simples dentro de `duel-arena.blade.php`, com `fetch` para `POST /duel/{duel}/dice-roll` e `GET /duel/{duel}/dice-rolls` (implementados em `DuelToolsController`).
 - O contador é limitado no servidor a 1–10; os resultados usam `random_int(1, 6)` e ficam persistidos em `dice_rolls`.
-- O componente `DuelDice` e `tests/Feature/DuelDiceTest.php` continuam no repositório cobrindo a implementação Livewire, embora a arena use o modal via fetch.
+- Em 2026-11-10 o componente Livewire `DuelDice`, sua view e `tests/Feature/DuelDiceTest.php` foram removidos por não terem mais uso; a cobertura equivalente está em `tests/Feature/DuelToolsTest.php`.
+- O recurso "repetir último lançamento" existia apenas no componente removido e não foi migrado para o modal; se voltar a ser desejado, precisa ser reimplementado no modal.
 - Validação no moto g56 5G (ZF525FLTVF), após a remoção dos componentes Livewire aninhados: abrir modal, rolar, ver soma/valores e histórico persistido (ex.: "Soma: 4 — 4" e "1 dado(s): 4 = 4"). Sem erros no `browser.log`.
 - A pendência de ANR no emulador registrada em 2026-11-06 não se reproduziu no aparelho físico.

@@ -79,10 +79,10 @@ Os arquivos abaixo incluem histórico/decisões e handoff específico. As demais
 | [029](./029-acessibilidade-e-movimento-reduzido.md) | Acessibilidade e movimento reduzido | Pendente |
 | [030](./030-navegacao-e-ferramentas-contextuais.md) | Navegação e ferramentas contextuais | Em andamento — início, nova partida, aparência e retomada acessíveis |
 | [031](./031-design-system-e-polimento-visual.md) | Design system e polimento visual | Pendente |
-| [032](./032-qa-e-testes-de-integracao.md) | QA e testes de integração | Parcial — suíte 151/151 verde; fluxos principais validados em dispositivo; validação visual e áudio pendentes |
+| [032](./032-qa-e-testes-de-integracao.md) | QA e testes de integração | Parcial — suíte 142/142 verde; fluxos principais validados em dispositivo; validação visual e áudio pendentes |
 | [033](./033-build-android-e-documentacao-de-entrega.md) | Build Android e documentação de entrega | Parcial — APK debug é gerado; instalação/abertura evidenciadas em build anterior; entrega pendente |
 
-Status revisados em 2026-11-09 contra o código, a suíte automatizada (`151/151`) e a revalidação funcional no moto g56 5G. Onde o corpo de uma tarefa preserva histórico anterior, ele foi mantido e marcado como superado.
+Status revisados em 2026-11-09 contra o código e a revalidação funcional no moto g56 5G; suíte atual em 2026-11-10: `142/142`. Onde o corpo de uma tarefa preserva histórico anterior, ele foi mantido e marcado como superado.
 
 ## Ordem sugerida
 

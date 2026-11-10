@@ -1,6 +1,6 @@
 # 032 — QA e testes de integração
 
-- **Status:** Parcial — suíte automatizada verde (151/151); fluxos principais validados em dispositivo Android; restam validações visuais (5–8 jogadores em paisagem, movimento reduzido) e áudio
+- **Status:** Parcial — suíte automatizada verde (142/142); fluxos principais validados em dispositivo Android; restam validações visuais (5–8 jogadores em paisagem, movimento reduzido) e áudio
 - **Área:** Qualidade
 - **Prioridade:** Bloqueadora
 
@@ -23,7 +23,7 @@ Na inspeção inicial, 79 de 80 testes passaram. O teste pendente envolve a aus�
 
 ### Estado atual — 2026-11-09
 
-- `php artisan test --compact` → **151 testes, 151 aprovados, 496 asserções, 0 falhas**.
+- `php artisan test --compact` → **142 testes, 142 aprovados, 453 asserções, 0 falhas**.
 - `tests/Feature/DuelToolsTest.php` cobre endpoints de moeda, dados e lembretes (incluindo destaque e isolamento por duelo); `DuelArenaTest` cobre o sorteio do primeiro jogador com 2 e 8 participantes.
 - A falha de `wallpaper__scrim` não existe mais. O teste passa, mas apenas verifica a string da classe no HTML; a camada visual de contraste continua pendente na tarefa 027.
 - A validação em build/dispositivo NativePHP foi feita em 2026-11-09; ver seção no fim do arquivo. Itens visuais e áudio continuam pendentes.
@@ -48,5 +48,13 @@ Na inspeção inicial, 79 de 80 testes passaram. O teste pendente envolve a aus�
 - Interações Livewire da arena passaram a funcionar após remover os componentes Livewire aninhados (dados/moeda/lembretes) do `duel-arena.blade.php`: `drawFirstPlayer`, `toggleHapticFeedback`, `toggleOpponentRotation`, `subtract/halve/double/restore/openLifePointCalculator/closeLifePointCalculator`, `editPlayerIdentity/cancelPlayerIdentityEdit`, `togglePlayerExpansion`, `advanceTurn`, `undo`, `redo` e `$set('editingPlayerColor', ...)`.
 - Ferramentas via fetch validadas: moeda (resultado/totais/histórico), dados (soma/valores/histórico) e lembretes (criar com destaque por turno/fase, concluir/reabrir e remover).
 - Estado residual corrigido: não há mais texto `/div>` vazando na arena; o sorteio do primeiro jogador agora exibe o nome sorteado em `role="status"`.
-- Suíte: 151 testes, 151 aprovados, 496 asserções. Pint limpo.
+- Suíte: 142 testes, 142 aprovados, 453 asserções. Pint limpo.
 - Ainda depende de inspeção humana: matriz visual de 5–8 jogadores em paisagem, contraste do papel de parede, movimento reduzido e áudio (sem API no NativePHP instalado).
+
+## Revalidação em dispositivo - 2026-11-10
+
+- Build debug atual reinstalado no moto g56 5G (ZF525FLTVF); `am force-stop` + `am start -W` resultou em `LaunchState: COLD` e `TotalTime: 1049 ms`.
+- Tema: `selectTheme('minimal-arena')` atualizou `data-theme` (`holographic` -> `minimal-arena`) e a meta `theme-color` (`#0f131d` -> `#f7f7f4`) sem reload; após reload o tema persistiu e o original `holographic` foi restaurado ao final.
+- Arena `/duel/1`: sorteio do primeiro jogador exibiu `role="status"`, subtração/restauração de PV, criar/concluir/remover lembrete (com destaque), moeda e dados via fetch; sem erros JS e sem vazamento de HTML.
+- `browser.log` sem erros (apenas mensagens de SafeArea).
+- Suíte: 142 testes, 142 aprovados, 453 asserções. Pint limpo.

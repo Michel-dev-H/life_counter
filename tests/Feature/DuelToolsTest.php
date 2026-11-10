@@ -39,11 +39,29 @@ it('rolls the requested number of dice within the supported range', function () 
         ->assertJsonPath('count', 10)
         ->assertJsonCount(10, 'results');
 
-    $roll = $duel->diceRolls()->sole();
+    $this->postJson(route('duel.dice-roll', $duel), ['count' => 0])
+        ->assertOk()
+        ->assertJsonPath('count', 1)
+        ->assertJsonCount(1, 'results');
+
+    $roll = $duel->diceRolls()->orderBy('id')->firstOrFail();
 
     expect($roll->dice_count)->toBe(10)
         ->and($roll->results)->toHaveCount(10)
         ->and($roll->total)->toBe(array_sum($roll->results));
+});
+
+it('keeps dice rolls isolated to their duel and within six-sided range', function () {
+    $duel = Duel::startWith([['name' => 'Ana']]);
+    $otherDuel = Duel::startWith([['name' => 'Bruno']]);
+
+    $this->postJson(route('duel.dice-roll', $duel), ['count' => 3])->assertOk();
+
+    $roll = $duel->diceRolls()->sole();
+
+    expect($roll->results)->toHaveCount(3)
+        ->and(array_filter($roll->results, fn (int $result): bool => $result < 1 || $result > 6))->toBe([])
+        ->and($otherDuel->diceRolls()->count())->toBe(0);
 });
 
 it('returns the dice roll history for the duel', function () {

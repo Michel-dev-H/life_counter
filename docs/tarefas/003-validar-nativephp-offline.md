@@ -190,3 +190,8 @@ ativephp/android/app/build/outputs/apk/debug/app-debug.apk (~179,76 MB).
 - Após remover os componentes Livewire aninhados da arena, as ações `wire:click` passaram a funcionar no WebView: controles de PV, identidade, expansão/ordenação, fases, turno, undo/redo e vibração. Detalhes nas tarefas 012-014, 017 e 032.
 - Ferramentas de mesa (moeda, dados, lembretes) operam via endpoints JSON (`DuelToolsController`) e foram validadas no aparelho.
 - `native:devices`/`native:status` continuam imprecisos; `adb` segue sendo a fonte confiável.
+
+## Cold start após reinstalação - 2026-11-10
+
+- Build debug atual reinstalado no moto g56 5G (ZF525FLTVF).
+- `am force-stop` + `am start -W`: `LaunchState: COLD`, `TotalTime: 1049 ms`, tema persistido entre reinícios.

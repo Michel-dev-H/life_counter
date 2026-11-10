@@ -46,4 +46,4 @@ Permitir um ou vários lançamentos de moeda com contagem e histórico fáceis d
 - Persistência em `coin_flips`; totais de Cara/Coroa e histórico de até 20 lançamentos retornados pela API.
 - O componente Livewire antigo (`DuelCoinFlip`) foi removido por não ser mais renderizado.
 - Validação no moto g56 5G (ZF525FLTVF): abrir modal, lançar, atualizar resultado/totais e histórico (ex.: "Cara — Cara: 1, Coroa: 0, Total: 1" e item no histórico com horário). Sem erros no `browser.log`.
-- Cobertura: `tests/Feature/DuelToolsTest.php` cobre resultado, totais, histórico e persistência; `php artisan test --compact` passou com 151 testes/496 asserções na rodada final.
+- Cobertura: `tests/Feature/DuelToolsTest.php` cobre resultado, totais, histórico e persistência; `php artisan test --compact` passou com 142 testes/453 asserções na rodada final.
