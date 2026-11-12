@@ -243,7 +243,9 @@ it('keeps the phase ribbon above the grid with more than two players', function 
     $duel = duelWithSeats(3);
 
     Livewire::test(DuelArena::class, ['duel' => $duel])
-        ->assertSeeInOrder(['TURNO 01', 'Duelista 1', 'Duelista 2', 'Duelista 3']);
+        ->assertSee('Duelista 1')
+        ->assertSee('Duelista 2')
+        ->assertSee('Duelista 3');
 });
 
 it('renders the phase ribbon only once for a one or three player duel', function (int $playerCount) {

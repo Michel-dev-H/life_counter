@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="pt-BR" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalização &amp; Temas — Duel Nexus</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'preto-profundo': '#080B12',
+        'grafite': '#111827',
+        'azul-tecnologico': '#176BCE',
+        'ciano-holografico': '#35D8FF',
+        'branco-frio': '#F2F5FA',
+        'vermelho-dano': '#FF4D5A',
+        'verde-recuperacao': '#43D9A3',
+        'dourado-destaque': '#D6B56D',
+        'accent': '#35D8FF',
+        'damage': '#FF4D5A',
+        'heal': '#43D9A3',
+        'gold': '#D6B56D',
+        'light-primary': '#176BCE',
+        'light-on-primary': '#FFFFFF',
+        'light-surface': '#111827',
+        'light-on-surface': '#F2F5FA',
+        'dark-primary': '#35D8FF',
+        'dark-on-primary': '#080B12',
+        'dark-surface': '#080B12',
+        'dark-on-surface': '#F2F5FA',
+      },
+      borderRadius: {
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '20px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '16px',
+      },
+      fontFamily: {
+        'display': ['"Orbitron"', 'sans-serif'],
+        'headline': ['"Orbitron"', 'sans-serif'],
+        'body': ['"Rajdhani"', 'sans-serif'],
+        'label': ['"Rajdhani"', 'sans-serif'],
+      },
+      fontSize: {
+        'display-lg': ['48px', { lineHeight: '52px', letterSpacing: '-0.5px', fontWeight: '800' }],
+        'display-lg-mobile': ['32px', { lineHeight: '38px', letterSpacing: '-0.25px', fontWeight: '800' }],
+        'display-md': ['36px', { lineHeight: '42px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'display-md-mobile': ['28px', { lineHeight: '34px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-lg': ['28px', { lineHeight: '34px', letterSpacing: '0px', fontWeight: '700' }],
+        'headline-lg-mobile': ['22px', { lineHeight: '28px', letterSpacing: '0px', fontWeight: '700' }],
+        'headline-md': ['20px', { lineHeight: '26px', letterSpacing: '0.5px', fontWeight: '700' }],
+        'body-lg': ['16px', { lineHeight: '22px', letterSpacing: '0.25px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '500' }],
+        'label-lg': ['13px', { lineHeight: '18px', letterSpacing: '0.75px', fontWeight: '700' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.5px', fontWeight: '600' }],
+        'label-sm': ['10px', { lineHeight: '14px', letterSpacing: '0.5px', fontWeight: '600' }],
+      },
+      transitionDuration: {
+        'state-change': '120ms',
+        'surface-enter': '180ms',
+        'surface-exit': '140ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'surface-exit': 'ease-in',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  <style>
+    .pattern-dots {
+      background-image: radial-gradient(rgba(53, 216, 255, 0.08) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+  </style>
+</head>
+<body class="bg-preto-profundo text-branco-frio min-h-[884px] flex flex-col font-body pattern-dots" data-stitch-vh="min-h-[884px]===min-h-screen">
+
+  <!-- TOP HEADER -->
+  <header class="bg-grafite/90 border-b border-ciano-holografico/20 px-4 py-3 flex items-center justify-between sticky top-0 z-30 backdrop-blur-sm">
+    <div class="flex items-center gap-2">
+      <a href="../duel-arena-2p/DuelArena2P.html" class="p-1 rounded text-branco-frio/70 hover:text-ciano-holografico">
+        <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+      </a>
+      <div>
+        <h1 class="font-headline text-label-lg text-ciano-holografico tracking-wider uppercase leading-tight">PERSONALIZAÇÃO VISUAL</h1>
+        <p class="text-[11px] text-branco-frio/60 font-body">Estilos de Duel Disk e Superfícies Holográficas</p>
+      </div>
+    </div>
+    
+    <button class="px-3 py-1 rounded bg-ciano-holografico text-preto-profundo text-xs font-headline font-bold uppercase shadow-[0_0_10px_#35D8FF]">
+      SALVAR
+    </button>
+  </header>
+
+  <!-- MAIN SCROLLABLE CONTENT -->
+  <main class="flex-1 p-4 space-y-6 overflow-y-auto">
+
+    <!-- ============================================== -->
+    <!-- SECTION 1: THEME ARCHETYPES (3 STYLES) -->
+    <!-- ============================================== -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="font-headline text-xs font-bold uppercase tracking-wider text-ciano-holografico flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">style</span>
+          ESTILOS DE DUEL DISK
+        </h2>
+        <span class="text-[11px] text-branco-frio/50 font-body">3 Modos de Interface</span>
+      </div>
+
+      <!-- Theme 1: Duel Disk Classic (Active) -->
+      <label class="block bg-grafite border-2 border-ciano-holografico rounded-xl p-3.5 cursor-pointer relative shadow-[0_0_15px_rgba(53,216,255,0.2)]">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <input type="radio" name="duel_theme" checked class="text-ciano-holografico focus:ring-0">
+            <div>
+              <h3 class="font-headline text-sm font-bold text-branco-frio uppercase">Duel Disk Classic</h3>
+              <p class="font-body text-xs text-branco-frio/70">Linhas de energia holográfica, azul clássico de KaibaCorp e chanfros retrofuturistas.</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-headline bg-ciano-holografico/20 border border-ciano-holografico/50 text-ciano-holografico px-2 py-0.5 rounded uppercase">ATIVO</span>
+        </div>
+        <!-- Theme Color Preview Bar -->
+        <div class="flex gap-1.5 mt-3 pt-2 border-t border-branco-frio/10">
+          <span class="h-2 flex-1 rounded bg-[#080B12]"></span>
+          <span class="h-2 flex-1 rounded bg-[#176BCE]"></span>
+          <span class="h-2 flex-1 rounded bg-[#35D8FF]"></span>
+          <span class="h-2 flex-1 rounded bg-[#FF4D5A]"></span>
+        </div>
+      </label>
+
+      <!-- Theme 2: Duel Disk Modern -->
+      <label class="block bg-grafite border border-branco-frio/15 rounded-xl p-3.5 cursor-pointer hover:border-ciano-holografico/50 transition">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <input type="radio" name="duel_theme" class="text-ciano-holografico focus:ring-0">
+            <div>
+              <h3 class="font-headline text-sm font-bold text-branco-frio uppercase">Duel Disk Modern (Neo Tech)</h3>
+              <p class="font-body text-xs text-branco-frio/70">Texturas metálicas escurecidas, iluminação de combate de alta saturação e subpainéis angulares.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-1.5 mt-3 pt-2 border-t border-branco-frio/10">
+          <span class="h-2 flex-1 rounded bg-[#0A0E17]"></span>
+          <span class="h-2 flex-1 rounded bg-[#1F293D]"></span>
+          <span class="h-2 flex-1 rounded bg-[#00E5FF]"></span>
+          <span class="h-2 flex-1 rounded bg-[#D6B56D]"></span>
+        </div>
+      </label>
+
+      <!-- Theme 3: NEURON Inspired -->
+      <label class="block bg-grafite border border-branco-frio/15 rounded-xl p-3.5 cursor-pointer hover:border-ciano-holografico/50 transition">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <input type="radio" name="duel_theme" class="text-ciano-holografico focus:ring-0">
+            <div>
+              <h3 class="font-headline text-sm font-bold text-branco-frio uppercase">NEURON Inspired (Pragmático)</h3>
+              <p class="font-body text-xs text-branco-frio/70">Layout sóbrio de máximo contraste, foco estrito na legibilidade rápida e ausência de efeitos pesados.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-1.5 mt-3 pt-2 border-t border-branco-frio/10">
+          <span class="h-2 flex-1 rounded bg-[#121212]"></span>
+          <span class="h-2 flex-1 rounded bg-[#242424]"></span>
+          <span class="h-2 flex-1 rounded bg-[#3B82F6]"></span>
+          <span class="h-2 flex-1 rounded bg-[#FFFFFF]"></span>
+        </div>
+      </label>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- SECTION 2: HOLOGRAPHIC WALLPAPERS GALLERY -->
+    <!-- ============================================== -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="font-headline text-xs font-bold uppercase tracking-wider text-ciano-holografico flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">wallpaper</span>
+          SUPERFÍCIE &amp; PAPÉIS DE PAREDE
+        </h2>
+        <span class="text-[11px] text-branco-frio/50 font-body">Preserva Legibilidade</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Wallpaper 1 (Selected) -->
+        <div class="relative rounded-xl overflow-hidden border-2 border-ciano-holografico bg-gradient-to-br from-preto-profundo via-azul-tecnologico/30 to-preto-profundo p-3 h-28 flex flex-col justify-between shadow-[0_0_12px_rgba(53,216,255,0.3)]">
+          <span class="material-symbols-outlined text-ciano-holografico text-[20px]">blur_on</span>
+          <div>
+            <span class="font-headline text-xs font-bold text-branco-frio block">Arena Holográfica</span>
+            <span class="text-[9px] text-ciano-holografico font-headline uppercase">Selecionado</span>
+          </div>
+        </div>
+
+        <!-- Wallpaper 2 -->
+        <div class="relative rounded-xl overflow-hidden border border-branco-frio/15 bg-gradient-to-br from-preto-profundo via-purple-950/40 to-preto-profundo p-3 h-28 flex flex-col justify-between hover:border-ciano-holografico transition cursor-pointer">
+          <span class="material-symbols-outlined text-purple-400 text-[20px]">dark_mode</span>
+          <div>
+            <span class="font-headline text-xs font-bold text-branco-frio block">Dimensão Sombria</span>
+            <span class="text-[9px] text-branco-frio/50 font-headline uppercase">Padrão TCG</span>
+          </div>
+        </div>
+
+        <!-- Wallpaper 3 -->
+        <div class="relative rounded-xl overflow-hidden border border-branco-frio/15 bg-gradient-to-br from-preto-profundo via-amber-950/30 to-preto-profundo p-3 h-28 flex flex-col justify-between hover:border-ciano-holografico transition cursor-pointer">
+          <span class="material-symbols-outlined text-dourado-destaque text-[20px]">stars</span>
+          <div>
+            <span class="font-headline text-xs font-bold text-branco-frio block">Símbolos Místicos</span>
+            <span class="text-[9px] text-branco-frio/50 font-headline uppercase">Milenar</span>
+          </div>
+        </div>
+
+        <!-- Wallpaper 4: Custom Upload -->
+        <div class="relative rounded-xl overflow-hidden border border-dashed border-branco-frio/30 bg-grafite/50 p-3 h-28 flex flex-col items-center justify-center text-center hover:border-ciano-holografico transition cursor-pointer">
+          <span class="material-symbols-outlined text-ciano-holografico text-[24px] mb-1">add_photo_alternate</span>
+          <span class="font-headline text-[11px] text-branco-frio uppercase">Galeria do Celular</span>
+          <span class="text-[9px] text-branco-frio/50 font-body">Importar Imagem</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- SECTION 3: CONTRAST & LEGIBILITY SETTINGS -->
+    <!-- ============================================== -->
+    <section class="bg-grafite border border-branco-frio/15 rounded-xl p-4 space-y-3">
+      <h3 class="font-headline text-xs font-bold uppercase tracking-wider text-branco-frio flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px]">visibility</span>
+        AJUSTES DE CONTRASTE EM MESA
+      </h3>
+
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="font-body text-xs font-bold text-branco-frio block">Camada de Escurecimento (Dimming)</span>
+            <span class="text-[11px] text-branco-frio/60 font-body">Garante legibilidade sob luz forte de salão de eventos</span>
+          </div>
+          <input type="range" min="30" max="90" value="70" class="accent-ciano-holografico w-24">
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-branco-frio/10">
+          <div>
+            <span class="font-body text-xs font-bold text-branco-frio block">Inversão 180° Automática</span>
+            <span class="text-[11px] text-branco-frio/60 font-body">Inverte automaticamente o P2 quando apoiado em mesa</span>
+          </div>
+          <input type="checkbox" checked class="rounded text-ciano-holografico focus:ring-0">
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PERSISTENT FOOTER NAVIGATION -->
+  <footer class="bg-grafite/95 border-t border-ciano-holografico/20 px-4 py-2 z-30 flex items-center justify-around">
+    <a href="../duel-arena-2p/DuelArena2P.html" class="flex flex-col items-center text-branco-frio/60 hover:text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">swords</span>
+      <span class="text-[10px] font-headline uppercase">Arena</span>
+    </a>
+    <a href="../card-counters/CardCounters.html" class="flex flex-col items-center text-branco-frio/60 hover:text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">toll</span>
+      <span class="text-[10px] font-headline uppercase">Contadores</span>
+    </a>
+    <a href="../multi-duelist/MultiDuelist.html" class="flex flex-col items-center text-branco-frio/60 hover:text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">groups</span>
+      <span class="text-[10px] font-headline uppercase">4/8 Duelistas</span>
+    </a>
+    <a href="../duel-customization/DuelCustomization.html" class="flex flex-col items-center text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">palette</span>
+      <span class="text-[10px] font-headline uppercase">Estilos</span>
+    </a>
+  </footer>
+
+
+
+</body></html>

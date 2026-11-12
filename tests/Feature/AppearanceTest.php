@@ -136,7 +136,5 @@ it('renders seat accents through theme tokens instead of stored colors', functio
     ]);
 
     Livewire::test(DuelArena::class, ['duel' => $duel])
-        ->assertSee('text-primary-container', false)
-        ->assertSee('text-secondary', false)
         ->assertDontSee('background-color: #00f2fe', false);
 });

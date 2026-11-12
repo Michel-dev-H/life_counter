@@ -1,0 +1,33 @@
+@theme {
+    /* --- Design system: Duel Nexus (arena.html / personalize.html) --- */
+    --color-preto-profundo: #080B12;
+    --color-grafite: #111827;
+    --color-azul-tecnologico: #176BCE;
+    --color-ciano-holografico: #35D8FF;
+    --color-branco-frio: #F2F5FA;
+    --color-vermelho-dano: #FF4D5A;
+    --color-verde-recuperacao: #43D9A3;
+    --color-dourado-destaque: #D6B56D;
+    --color-accent: #35D8FF;
+    --color-damage: #FF4D5A;
+    --color-heal: #43D9A3;
+    --color-gold: #D6B56D;
+
+    --font-display: "Orbitron", ui-sans-serif, system-ui, sans-serif;
+    --font-headline: "Orbitron", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Rajdhani", ui-sans-serif, system-ui, sans-serif;
+    --font-label: "Rajdhani", ui-sans-serif, system-ui, sans-serif;
+
+    --radius-sm: 4px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+
+    --spacing-gutter-xs: 4px;
+    --spacing-gutter-sm: 8px;
+    --spacing-gutter-md: 16px;
+    --spacing-gutter-lg: 24px;
+    --spacing-gutter-xl: 32px;
+    --spacing-section: 40px;
+    --spacing-page-margin: 16px;
+}

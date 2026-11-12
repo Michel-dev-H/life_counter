@@ -8,6 +8,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ $title ?? config('app.name') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
         {{ Vite::fonts() }}
         @livewireStyles
     </head>
@@ -32,13 +35,11 @@
                     </div>
                 </aside>
 
-                <div class="min-w-0 flex-1 pb-24 md:pb-0">
+                <div class="min-w-0 flex-1 pb-0 md:pb-0">
                     {{ $slot }}
                 </div>
 
-                <div class="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-surface-container-lowest/95 pb-safe backdrop-blur md:hidden">
-                    @include('layouts.primary-navigation', ['placement' => 'mobile'])
-                </div>
+            </div>
             </div>
         @endif
 

@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="pt-BR" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arena Multi-Duelistas — Duel Nexus</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'preto-profundo': '#080B12',
+        'grafite': '#111827',
+        'azul-tecnologico': '#176BCE',
+        'ciano-holografico': '#35D8FF',
+        'branco-frio': '#F2F5FA',
+        'vermelho-dano': '#FF4D5A',
+        'verde-recuperacao': '#43D9A3',
+        'dourado-destaque': '#D6B56D',
+        'accent': '#35D8FF',
+        'damage': '#FF4D5A',
+        'heal': '#43D9A3',
+        'gold': '#D6B56D',
+        'light-primary': '#176BCE',
+        'light-on-primary': '#FFFFFF',
+        'light-surface': '#111827',
+        'light-on-surface': '#F2F5FA',
+        'dark-primary': '#35D8FF',
+        'dark-on-primary': '#080B12',
+        'dark-surface': '#080B12',
+        'dark-on-surface': '#F2F5FA',
+      },
+      borderRadius: {
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '20px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '16px',
+      },
+      fontFamily: {
+        'display': ['"Orbitron"', 'sans-serif'],
+        'headline': ['"Orbitron"', 'sans-serif'],
+        'body': ['"Rajdhani"', 'sans-serif'],
+        'label': ['"Rajdhani"', 'sans-serif'],
+      },
+      fontSize: {
+        'display-lg': ['48px', { lineHeight: '52px', letterSpacing: '-0.5px', fontWeight: '800' }],
+        'display-lg-mobile': ['32px', { lineHeight: '38px', letterSpacing: '-0.25px', fontWeight: '800' }],
+        'display-md': ['36px', { lineHeight: '42px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'display-md-mobile': ['28px', { lineHeight: '34px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-lg': ['28px', { lineHeight: '34px', letterSpacing: '0px', fontWeight: '700' }],
+        'headline-lg-mobile': ['22px', { lineHeight: '28px', letterSpacing: '0px', fontWeight: '700' }],
+        'headline-md': ['20px', { lineHeight: '26px', letterSpacing: '0.5px', fontWeight: '700' }],
+        'body-lg': ['16px', { lineHeight: '22px', letterSpacing: '0.25px', fontWeight: '600' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '500' }],
+        'label-lg': ['13px', { lineHeight: '18px', letterSpacing: '0.75px', fontWeight: '700' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.5px', fontWeight: '600' }],
+        'label-sm': ['10px', { lineHeight: '14px', letterSpacing: '0.5px', fontWeight: '600' }],
+      },
+      transitionDuration: {
+        'state-change': '120ms',
+        'surface-enter': '180ms',
+        'surface-exit': '140ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'surface-exit': 'ease-in',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  <style>
+    .grid-duelist-circuit {
+      background-image: radial-gradient(rgba(53, 216, 255, 0.06) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+  </style>
+</head>
+<body class="bg-preto-profundo text-branco-frio min-h-[884px] flex flex-col font-body grid-duelist-circuit" data-stitch-vh="min-h-[884px]===min-h-screen">
+
+  <!-- TOP HEADER WITH PLAYER COUNT SWITCHER -->
+  <header class="bg-grafite/90 border-b border-ciano-holografico/20 px-4 py-2.5 flex items-center justify-between sticky top-0 z-30 backdrop-blur-sm">
+    <div class="flex items-center gap-2">
+      <a href="../duel-arena-2p/DuelArena2P.html" class="p-1 rounded text-branco-frio/70 hover:text-ciano-holografico">
+        <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+      </a>
+      <div>
+        <h1 class="font-headline text-label-lg text-ciano-holografico tracking-wider uppercase leading-tight">MULTI-DUELISTAS</h1>
+        <span id="player-count-subtitle" class="text-[11px] text-branco-frio/60 font-body">Formato Battle Royale / Tag Team</span>
+      </div>
+    </div>
+
+    <!-- Switcher 1P / 4P / 8P -->
+    <div class="flex items-center gap-1 bg-preto-profundo/90 p-1 rounded-lg border border-branco-frio/15">
+      <button onclick="setPlayerLayout(1)" id="btn-layout-1" class="px-2 py-0.5 rounded text-[11px] font-headline text-branco-frio/60 hover:text-branco-frio">1P</button>
+      <button onclick="setPlayerLayout(4)" id="btn-layout-4" class="px-2 py-0.5 rounded text-[11px] font-headline bg-azul-tecnologico text-branco-frio font-bold shadow-[0_0_8px_#176BCE]">4P</button>
+      <button onclick="setPlayerLayout(8)" id="btn-layout-8" class="px-2 py-0.5 rounded text-[11px] font-headline text-branco-frio/60 hover:text-branco-frio">8P</button>
+    </div>
+  </header>
+
+  <!-- MAIN ADAPTIVE PLAYFIELD -->
+  <main class="flex-1 p-3 flex flex-col justify-between overflow-y-auto">
+
+    <!-- ============================================== -->
+    <!-- VIEWPORT A: 4 PLAYERS QUAD LAYOUT (ACTIVE) -->
+    <!-- ============================================== -->
+    <div id="layout-4p" class="grid grid-cols-2 gap-2.5 h-full">
+
+      <!-- P1 POD -->
+      <article class="bg-grafite/90 border border-ciano-holografico/40 rounded-xl p-3 flex flex-col justify-between relative overflow-hidden shadow-md">
+        <div class="flex items-center justify-between pb-1 border-b border-branco-frio/10">
+          <span class="text-xs font-headline font-bold text-ciano-holografico">P1 • YUGI</span>
+          <span class="text-[9px] bg-dourado-destaque/20 text-dourado-destaque px-1 rounded font-headline">1º</span>
+        </div>
+        <div class="py-2 text-center">
+          <span id="lp-4p-1" class="font-display text-3xl font-extrabold text-branco-frio tabular-nums block drop-shadow-[0_0_8px_rgba(53,216,255,0.4)]">8000</span>
+          <span class="text-[9px] font-headline text-ciano-holografico uppercase tracking-wider">PONTOS DE VIDA</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-branco-frio/10">
+          <button onclick="quickMod4P(1, -1000)" class="py-1.5 bg-vermelho-dano/20 text-vermelho-dano border border-vermelho-dano/40 rounded text-[11px] font-headline font-bold hover:bg-vermelho-dano/30">−1000</button>
+          <button onclick="quickMod4P(1, 1000)" class="py-1.5 bg-verde-recuperacao/20 text-verde-recuperacao border border-verde-recuperacao/40 rounded text-[11px] font-headline font-bold hover:bg-verde-recuperacao/30">+1000</button>
+        </div>
+      </article>
+
+      <!-- P2 POD -->
+      <article class="bg-grafite/90 border border-branco-frio/20 rounded-xl p-3 flex flex-col justify-between relative overflow-hidden shadow-md">
+        <div class="flex items-center justify-between pb-1 border-b border-branco-frio/10">
+          <span class="text-xs font-headline font-bold text-branco-frio">P2 • SETO</span>
+          <span class="text-[9px] text-branco-frio/40 font-headline">2º</span>
+        </div>
+        <div class="py-2 text-center">
+          <span id="lp-4p-2" class="font-display text-3xl font-extrabold text-branco-frio tabular-nums block">6500</span>
+          <span class="text-[9px] font-headline text-branco-frio/50 uppercase tracking-wider">PONTOS DE VIDA</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-branco-frio/10">
+          <button onclick="quickMod4P(2, -1000)" class="py-1.5 bg-vermelho-dano/20 text-vermelho-dano border border-vermelho-dano/40 rounded text-[11px] font-headline font-bold hover:bg-vermelho-dano/30">−1000</button>
+          <button onclick="quickMod4P(2, 1000)" class="py-1.5 bg-verde-recuperacao/20 text-verde-recuperacao border border-verde-recuperacao/40 rounded text-[11px] font-headline font-bold hover:bg-verde-recuperacao/30">+1000</button>
+        </div>
+      </article>
+
+      <!-- P3 POD -->
+      <article class="bg-grafite/90 border border-branco-frio/20 rounded-xl p-3 flex flex-col justify-between relative overflow-hidden shadow-md">
+        <div class="flex items-center justify-between pb-1 border-b border-branco-frio/10">
+          <span class="text-xs font-headline font-bold text-branco-frio">P3 • JOEY</span>
+          <span class="text-[9px] text-branco-frio/40 font-headline">3º</span>
+        </div>
+        <div class="py-2 text-center">
+          <span id="lp-4p-3" class="font-display text-3xl font-extrabold text-branco-frio tabular-nums block">4200</span>
+          <span class="text-[9px] font-headline text-branco-frio/50 uppercase tracking-wider">PONTOS DE VIDA</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-branco-frio/10">
+          <button onclick="quickMod4P(3, -1000)" class="py-1.5 bg-vermelho-dano/20 text-vermelho-dano border border-vermelho-dano/40 rounded text-[11px] font-headline font-bold hover:bg-vermelho-dano/30">−1000</button>
+          <button onclick="quickMod4P(3, 1000)" class="py-1.5 bg-verde-recuperacao/20 text-verde-recuperacao border border-verde-recuperacao/40 rounded text-[11px] font-headline font-bold hover:bg-verde-recuperacao/30">+1000</button>
+        </div>
+      </article>
+
+      <!-- P4 POD -->
+      <article class="bg-grafite/90 border border-branco-frio/20 rounded-xl p-3 flex flex-col justify-between relative overflow-hidden shadow-md">
+        <div class="flex items-center justify-between pb-1 border-b border-branco-frio/10">
+          <span class="text-xs font-headline font-bold text-branco-frio">P4 • MARIK</span>
+          <span class="text-[9px] text-branco-frio/40 font-headline">4º</span>
+        </div>
+        <div class="py-2 text-center">
+          <span id="lp-4p-4" class="font-display text-3xl font-extrabold text-branco-frio tabular-nums block">8000</span>
+          <span class="text-[9px] font-headline text-branco-frio/50 uppercase tracking-wider">PONTOS DE VIDA</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-branco-frio/10">
+          <button onclick="quickMod4P(4, -1000)" class="py-1.5 bg-vermelho-dano/20 text-vermelho-dano border border-vermelho-dano/40 rounded text-[11px] font-headline font-bold hover:bg-vermelho-dano/30">−1000</button>
+          <button onclick="quickMod4P(4, 1000)" class="py-1.5 bg-verde-recuperacao/20 text-verde-recuperacao border border-verde-recuperacao/40 rounded text-[11px] font-headline font-bold hover:bg-verde-recuperacao/30">+1000</button>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEWPORT B: 8 PLAYERS EXPEDITION MATRIX (HIDDEN) -->
+    <!-- ============================================== -->
+    <div id="layout-8p" class="hidden grid-cols-2 gap-2 h-full overflow-y-auto">
+      <!-- 8 Compact Duelist Modules -->
+      <div class="bg-grafite/90 border border-ciano-holografico/40 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-ciano-holografico"><span>P1 YUGI</span><span>8000</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+      <div class="bg-grafite/90 border border-branco-frio/15 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-branco-frio"><span>P2 SETO</span><span>6500</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+      <div class="bg-grafite/90 border border-branco-frio/15 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-branco-frio"><span>P3 JOEY</span><span>4200</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+      <div class="bg-grafite/90 border border-branco-frio/15 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-branco-frio"><span>P4 MARIK</span><span>8000</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+      <div class="bg-grafite/90 border border-branco-frio/15 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-branco-frio"><span>P5 BAKURA</span><span>5100</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+      <div class="bg-grafite/90 border border-branco-frio/15 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-branco-frio"><span>P6 PEGASUS</span><span>7300</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+      <div class="bg-grafite/90 border border-branco-frio/15 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-branco-frio"><span>P7 MAI V.</span><span>3800</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+      <div class="bg-grafite/90 border border-branco-frio/15 rounded-lg p-2 flex flex-col justify-between">
+        <div class="flex justify-between items-center text-[10px] font-headline text-branco-frio"><span>P8 ISHIZU</span><span>8000</span></div>
+        <div class="flex gap-1 mt-1"><button class="flex-1 py-0.5 bg-vermelho-dano/20 text-vermelho-dano text-[10px] font-headline">−500</button><button class="flex-1 py-0.5 bg-verde-recuperacao/20 text-verde-recuperacao text-[10px] font-headline">+500</button></div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEWPORT C: 1 PLAYER PRACTICE / SOLO DUEL (HIDDEN) -->
+    <!-- ============================================== -->
+    <div id="layout-1p" class="hidden flex-col justify-between h-full bg-grafite/90 border border-ciano-holografico/40 rounded-xl p-5 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="font-headline text-sm font-bold text-ciano-holografico uppercase">MODO SOLITÁRIO • TESTE DE DECK</h3>
+        <span class="text-xs bg-azul-tecnologico/30 text-ciano-holografico px-2 py-0.5 rounded font-headline uppercase">SOLO</span>
+      </div>
+      <div class="my-auto text-center">
+        <span class="text-xs font-headline text-branco-frio/60 uppercase tracking-widest block mb-1">PONTOS DE VIDA</span>
+        <span id="lp-1p-val" class="font-display text-6xl font-extrabold text-branco-frio tabular-nums drop-shadow-[0_0_20px_rgba(53,216,255,0.5)]">8000</span>
+      </div>
+      <div class="grid grid-cols-2 gap-3 pt-3 border-t border-branco-frio/10">
+        <button onclick="document.getElementById(&#39;lp-1p-val&#39;).textContent = parseInt(document.getElementById(&#39;lp-1p-val&#39;).textContent) - 1000" class="py-3 bg-vermelho-dano/20 text-vermelho-dano border border-vermelho-dano rounded-lg font-headline text-sm font-bold">−1000 DANO</button>
+        <button onclick="document.getElementById(&#39;lp-1p-val&#39;).textContent = parseInt(document.getElementById(&#39;lp-1p-val&#39;).textContent) + 1000" class="py-3 bg-verde-recuperacao/20 text-verde-recuperacao border border-verde-recuperacao rounded-lg font-headline text-sm font-bold">+1000 RECUPERAR</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PERSISTENT FOOTER NAVIGATION -->
+  <footer class="bg-grafite/95 border-t border-ciano-holografico/20 px-4 py-2 z-30 flex items-center justify-around">
+    <a href="../duel-arena-2p/DuelArena2P.html" class="flex flex-col items-center text-branco-frio/60 hover:text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">swords</span>
+      <span class="text-[10px] font-headline uppercase">Arena</span>
+    </a>
+    <a href="../card-counters/CardCounters.html" class="flex flex-col items-center text-branco-frio/60 hover:text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">toll</span>
+      <span class="text-[10px] font-headline uppercase">Contadores</span>
+    </a>
+    <a href="../multi-duelist/MultiDuelist.html" class="flex flex-col items-center text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">groups</span>
+      <span class="text-[10px] font-headline uppercase">4/8 Duelistas</span>
+    </a>
+    <a href="../duel-customization/DuelCustomization.html" class="flex flex-col items-center text-branco-frio/60 hover:text-ciano-holografico">
+      <span class="material-symbols-outlined text-[20px]">palette</span>
+      <span class="text-[10px] font-headline uppercase">Estilos</span>
+    </a>
+  </footer>
+
+  <script>
+    let fourPlayerLps = { 1: 8000, 2: 6500, 3: 4200, 4: 8000 };
+
+    function quickMod4P(p, delta) {
+      fourPlayerLps[p] = Math.max(0, fourPlayerLps[p] + delta);
+      document.getElementById('lp-4p-' + p).textContent = fourPlayerLps[p];
+    }
+
+    function setPlayerLayout(count) {
+      const l1 = document.getElementById('layout-1p');
+      const l4 = document.getElementById('layout-4p');
+      const l8 = document.getElementById('layout-8p');
+
+      const b1 = document.getElementById('btn-layout-1');
+      const b4 = document.getElementById('btn-layout-4');
+      const b8 = document.getElementById('btn-layout-8');
+
+      const subtitle = document.getElementById('player-count-subtitle');
+
+      l1.classList.add('hidden');
+      l1.classList.remove('flex');
+      l4.classList.add('hidden');
+      l4.classList.remove('grid');
+      l8.classList.add('hidden');
+      l8.classList.remove('grid');
+
+      b1.className = 'px-2 py-0.5 rounded text-[11px] font-headline text-branco-frio/60 hover:text-branco-frio';
+      b4.className = 'px-2 py-0.5 rounded text-[11px] font-headline text-branco-frio/60 hover:text-branco-frio';
+      b8.className = 'px-2 py-0.5 rounded text-[11px] font-headline text-branco-frio/60 hover:text-branco-frio';
+
+      if (count === 1) {
+        l1.classList.remove('hidden');
+        l1.classList.add('flex');
+        b1.className = 'px-2 py-0.5 rounded text-[11px] font-headline bg-azul-tecnologico text-branco-frio font-bold shadow-[0_0_8px_#176BCE]';
+        subtitle.textContent = 'Treino Solo & Deck Testing';
+      } else if (count === 4) {
+        l4.classList.remove('hidden');
+        l4.classList.add('grid');
+        b4.className = 'px-2 py-0.5 rounded text-[11px] font-headline bg-azul-tecnologico text-branco-frio font-bold shadow-[0_0_8px_#176BCE]';
+        subtitle.textContent = 'Formato Battle Royale / Tag Team';
+      } else if (count === 8) {
+        l8.classList.remove('hidden');
+        l8.classList.add('grid');
+        b8.className = 'px-2 py-0.5 rounded text-[11px] font-headline bg-azul-tecnologico text-branco-frio font-bold shadow-[0_0_8px_#176BCE]';
+        subtitle.textContent = 'Torneio Suíço / Mesa de 8 Jogadores';
+      }
+    }
+  </script>
+
+
+</body></html>

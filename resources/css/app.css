@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './theme.css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -236,9 +237,22 @@ body[data-theme="minimal-arena"] {
     .dice-roll-reveal {
         animation: none;
     }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        transition-delay: 0s !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
 }
 
-/* Wallpaper scrim: camada de contraste sobre o papel de parede. */
+/* circuit grid background for arena views */
+.circuit-bg {
+    background-image: radial-gradient(rgba(53, 216, 255, 0.12) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
 .wallpaper__scrim {
     position: relative;
 }

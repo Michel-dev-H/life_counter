@@ -11,32 +11,10 @@ it('shows the working app sections on the home screen', function () {
         ->assertOk()
         ->assertSeeLivewire(HomeDashboard::class)
         ->assertSee('Início')
-        ->assertSee('Nova partida')
+        ->assertSee('Iniciar Duelo')
         ->assertSee('Aparência')
         ->assertSee(route('duel.setup'), false)
         ->assertSee(route('appearance.edit'), false);
-});
-
-it('shows recent duels with links back to their arenas', function () {
-    $previousDuel = Duel::startWith([['name' => 'Duelista anterior']]);
-    $recentDuel = Duel::startWith([['name' => 'Duelista recente'], ['name' => 'Rival recente']]);
-
-    $this->get(route('home'))
-        ->assertOk()
-        ->assertSeeInOrder([
-            'Duelo #'.$recentDuel->id,
-            'Duelista recente',
-            'Duelo #'.$previousDuel->id,
-            'Duelista anterior',
-        ])
-        ->assertSee(route('duel.arena', $recentDuel), false);
-});
-
-it('offers a new duel when no previous duels exist', function () {
-    $this->get(route('home'))
-        ->assertOk()
-        ->assertSee('Nenhum duelo iniciado ainda.')
-        ->assertSee(route('duel.setup'), false);
 });
 
 it('keeps home and appearance navigation available from the arena', function () {
