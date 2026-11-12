@@ -3,19 +3,29 @@
 
     <header class="pt-safe sticky top-0 z-30 border-b border-white/5 bg-preto-profundo/85 backdrop-blur-xl">
         <div class="mx-auto flex h-16 max-w-2xl items-center gap-2 px-4">
-            <span class="flex size-11 items-center justify-center rounded bg-azul-tecnologico/20 text-ciano-holografico-fixed-dim">
-                <x-icon name="shield" />
+            <a href=\"{{ route('home') }}\" class=\"p-1 rounded text-branco-frio/70 hover:text-ciano-holografico shrink-0\">
+                <x-icon name=\"arrow-left\" class=\"size-5\" />
+            </a>
+            <div class=\"min-w-0\">
+                <h1 class=\"truncate font-headline text-label-lg text-ciano-holografico tracking-wider uppercase leading-tight\">Lobby &amp; Configuração</h1>
+                <p class=\"text-[11px] text-branco-frio/60 font-body\">Configurações e Lobby Tático</p>
+            </div>","oldString">
+            <span class=\"flex size-11 items-center justify-center rounded bg-azul-tecnologico/20 text-ciano-holografico-fixed-dim\">
+                <x-icon name=\"shield\" />
             </span>
-            <div class="min-w-0">
-                <p class="font-headline text-label-sm uppercase tracking-widest text-ciano-holografico-fixed-dim">Configuração Tática</p>
-                <h1 class="truncate font-body text-headline-sm font-semibold text-branco-frio">Configurações e Lobby Tático</h1>
-            </div>
+            <div class=\"min-w-0\">
+                <p class=\"font-headline text-label-sm uppercase tracking-widest text-ciano-holografico-fixed-dim\">Configuração Tática</p>
+                <h1 class=\"truncate font-body text-headline-sm font-semibold text-branco-frio\">Configurações e Lobby Tático</h1>
+            </div>","path">
+C:\Users\MichelS\Desktop\Repositorios\life-counter\resources\views\livewire\duel-setup.blade.php
         </div>
     </header>
 
     <main class="relative mx-auto w-full max-w-2xl px-4 pb-10 pt-5">
         <div class="flex flex-wrap items-center justify-between gap-2">
-            <span class="font-headline text-label-sm uppercase tracking-widest text-ciano-holografico">Tactical Lobby • Multiplayer Setup</span>
+            <span class=\"font-headline text-label-sm uppercase tracking-widest text-ciano-holografico\">Configuração Tática</span>","oldString">
+            <span class=\"font-headline text-label-sm uppercase tracking-widest text-ciano-holografico\">Tactical Lobby • Multiplayer Setup</span>","path">
+C:\Users\MichelS\Desktop\Repositorios\life-counter\resources\views\livewire\duel-setup.blade.php
             <span class="hidden items-center gap-1.5 rounded bg-preto-profundo/80 border border-branco-frio/15 px-2 py-1 font-headline text-[10px] text-branco-frio/60 uppercase sm:flex whitespace-nowrap">
                 <x-icon name="offline" class="size-3.5 text-ciano-holografico" />
                 Offline-First
@@ -29,7 +39,9 @@
 
         <section class="mt-6">
             <div class="flex items-end justify-between gap-2">
-                <h2 class="font-headline text-label-md uppercase tracking-wider text-branco-frio">Capacidade da Arena</h2>
+                <h2 class=\"font-headline text-label-md uppercase tracking-wider text-ciano-holografico\">Capacidade da Arena</h2>","oldString">
+                <h2 class=\"font-headline text-label-md uppercase tracking-wider text-branco-frio\">Capacidade da Arena</h2>","path">
+C:\Users\MichelS\Desktop\Repositorios\life-counter\resources\views\livewire\duel-setup.blade.php
                 <span class="font-headline text-label-sm text-ciano-holografico-fixed-dim">
                     {{ count($playerNames) }} {{ count($playerNames) === 1 ? 'JOGADOR SELECIONADO' : 'JOGADORES SELECIONADOS' }}
                 </span>
@@ -55,7 +67,9 @@
         </section>
 
         <section class="mt-6">
-            <h2 class="font-headline text-label-md uppercase tracking-wider text-branco-frio">Pontos de Vida Iniciais (PV / LP)</h2>
+            <h2 class=\"font-headline text-label-md uppercase tracking-wider text-ciano-holografico\">Pontos de Vida Iniciais (PV / LP)</h2>","oldString">
+            <h2 class=\"font-headline text-label-md uppercase tracking-wider text-branco-frio\">Pontos de Vida Iniciais (PV / LP)</h2>","path">
+C:\Users\MichelS\Desktop\Repositorios\life-counter\resources\views\livewire\duel-setup.blade.php
 
             <div class="mt-2 grid grid-cols-2 gap-2">
                 @foreach ([
@@ -118,7 +132,9 @@
         </section>
 
         <section class="mt-6">
-            <h2 class="font-headline text-label-md uppercase tracking-wider text-branco-frio">Duelistas</h2>
+            <h2 class=\"font-headline text-label-md uppercase tracking-wider text-ciano-holografico\">Duelistas</h2>","oldString">
+            <h2 class=\"font-headline text-label-md uppercase tracking-wider text-branco-frio\">Duelistas</h2>","path">
+C:\Users\MichelS\Desktop\Repositorios\life-counter\resources\views\livewire\duel-setup.blade.php
 
             <div class="mt-2 flex flex-col gap-2">
                 @foreach ($playerNames as $index => $name)
@@ -214,7 +230,7 @@
         <button
             type="button"
             wire:click="start"
-            class="shadow-glow mt-8 flex h-14 w-full items-center justify-center gap-2 rounded bg-gradient-to-br from-primary-container to-[#4facfe] font-headline text-headline-sm font-bold uppercase tracking-wide text-branco-frio transition active:scale-[0.99]"
+            class="shadow-glow mt-8 flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-azul-tecnologico to-ciano-holografico font-headline text-headline-sm font-bold uppercase tracking-wide text-preto-profundo transition active:scale-[0.99]"
         >
             <x-icon name="play" class="size-5" />
             Iniciar Arena de Duelo
