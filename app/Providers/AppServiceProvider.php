@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Appearance;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // The appearance is read by the native chrome on every publish, so it
+        // keeps its cached wallpaper path for the life of the application.
+        $this->app->singleton(Appearance::class);
     }
 
     /**

@@ -3,15 +3,26 @@
 namespace App\Models;
 
 use App\Enums\DuelPhase;
+use Database\Factories\DuelFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
+/**
+ * @property int $id
+ * @property int $round
+ * @property int $turn
+ * @property int $active_seat
+ * @property int $timer_elapsed_seconds
+ * @property Carbon|null $timer_started_at
+ */
 class Duel extends Model
 {
+    /** @use HasFactory<DuelFactory> */
     use HasFactory;
 
     public const MIN_PLAYERS = 1;
@@ -72,6 +83,25 @@ class Duel extends Model
         'flame' => 'Chama',
         'crown' => 'Coroa',
         'leaf' => 'Folha',
+    ];
+
+    /**
+     * Native icon name per platform for every player icon.
+     *
+     * The native UI draws SF Symbols on iOS and Material Icons on Android, so
+     * each identity icon needs a name for both.
+     *
+     * @var array<string, array{ios: string, android: string}>
+     */
+    public const PLAYER_ICON_NAMES = [
+        'swords' => ['ios' => 'swords', 'android' => 'flash_on'],
+        'shield' => ['ios' => 'shield.fill', 'android' => 'shield'],
+        'star' => ['ios' => 'star.fill', 'android' => 'star'],
+        'sparkles' => ['ios' => 'sparkles', 'android' => 'auto_awesome'],
+        'bolt' => ['ios' => 'bolt.fill', 'android' => 'bolt'],
+        'flame' => ['ios' => 'flame.fill', 'android' => 'local_fire_department'],
+        'crown' => ['ios' => 'crown.fill', 'android' => 'workspace_premium'],
+        'leaf' => ['ios' => 'leaf.fill', 'android' => 'eco'],
     ];
 
     /** @return HasMany<DuelPlayer, $this> */
@@ -138,7 +168,7 @@ class Duel extends Model
 
                 $duel->duelPlayers()->create([
                     'player_id' => $player?->id,
-                    'name' => $name !== '' ? $name : ($player?->name ?? 'Jogador '.($index + 1)),
+                    'name' => $name !== '' ? $name : ($player->name ?? 'Jogador '.($index + 1)),
                     'color' => $color,
                     'icon' => $icon,
                     'starting_life_points' => $startingLifePoints,
@@ -288,5 +318,73 @@ class Duel extends Model
         });
 
         return true;
+    }
+
+    /**
+     * Roll the given number of six-sided dice and record the roll.
+     *
+     * The count is clamped to 1..10, the supported range of the tool.
+     */
+    public function rollDice(int $count): DiceRoll
+    {
+        $count = max(1, min(10, $count));
+
+        $results = [];
+        $total = 0;
+
+        for ($i = 0; $i < $count; $i++) {
+            $roll = random_int(1, 6);
+            $results[] = $roll;
+            $total += $roll;
+        }
+
+        return $this->diceRolls()->create([
+            'dice_count' => $count,
+            'results' => $results,
+            'total' => $total,
+        ]);
+    }
+
+    /**
+     * Flip a coin and record the result.
+     */
+    public function flipCoin(): CoinFlip
+    {
+        return $this->coinFlips()->create([
+            'result' => random_int(0, 1) === 0 ? 'heads' : 'tails',
+        ]);
+    }
+
+    /**
+     * How many times each side came up in this duel.
+     *
+     * @return array{heads: int, tails: int}
+     */
+    public function coinFlipCounts(): array
+    {
+        return [
+            'heads' => $this->coinFlips()->where('result', 'heads')->count(),
+            'tails' => $this->coinFlips()->where('result', 'tails')->count(),
+        ];
+    }
+
+    /**
+     * Ids of the pending reminders whose trigger matches the current turn
+     * and/or phase of the duel.
+     *
+     * @return array<int, int>
+     */
+    public function highlightedReminderIds(): array
+    {
+        $phase = (string) ($this->getAttributes()['phase'] ?? '');
+
+        return $this->reminders()
+            ->where('completed', false)
+            ->get()
+            ->filter(fn (Reminder $reminder): bool => ($reminder->trigger_turn !== null || $reminder->trigger_phase !== null)
+                && ($reminder->trigger_turn === null || $reminder->trigger_turn === $this->turn)
+                && ($reminder->trigger_phase === null || $reminder->trigger_phase === $phase))
+            ->pluck('id')
+            ->all();
     }
 }

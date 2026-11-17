@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\LifePointEventFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LifePointEvent extends Model
 {
+    /** @use HasFactory<LifePointEventFactory> */
     use HasFactory;
 
     protected $fillable = ['before', 'after', 'operation', 'amount', 'undone_at'];
@@ -22,6 +24,9 @@ class LifePointEvent extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<DuelPlayer, $this>
+     */
     public function duelPlayer(): BelongsTo
     {
         return $this->belongsTo(DuelPlayer::class);

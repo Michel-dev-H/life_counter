@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ReminderFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reminder extends Model
 {
+    /** @use HasFactory<ReminderFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -28,11 +30,17 @@ class Reminder extends Model
         'duration_turns' => 'integer',
     ];
 
+    /**
+     * @return BelongsTo<Duel, $this>
+     */
     public function duel(): BelongsTo
     {
         return $this->belongsTo(Duel::class);
     }
 
+    /**
+     * @return BelongsTo<DuelPlayer, $this>
+     */
     public function player(): BelongsTo
     {
         return $this->belongsTo(DuelPlayer::class, 'duel_player_id');

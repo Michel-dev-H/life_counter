@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\DuelPlayerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,7 @@ use InvalidArgumentException;
 
 class DuelPlayer extends Model
 {
+    /** @use HasFactory<DuelPlayerFactory> */
     use HasFactory;
 
     public const MIN_LIFE_POINTS = 0;
@@ -38,21 +40,33 @@ class DuelPlayer extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Duel, $this>
+     */
     public function duel(): BelongsTo
     {
         return $this->belongsTo(Duel::class);
     }
 
+    /**
+     * @return BelongsTo<Player, $this>
+     */
     public function player(): BelongsTo
     {
         return $this->belongsTo(Player::class);
     }
 
+    /**
+     * @return HasMany<LifePointEvent, $this>
+     */
     public function lifePointEvents(): HasMany
     {
         return $this->hasMany(LifePointEvent::class);
     }
 
+    /**
+     * @return HasOne<LifePointEvent, $this>
+     */
     public function latestLifePointEvent(): HasOne
     {
         return $this->hasOne(LifePointEvent::class)->latestOfMany();

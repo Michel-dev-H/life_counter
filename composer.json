@@ -12,9 +12,8 @@
         "php": "^8.3",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
-        "livewire/blaze": "^1.0",
-        "livewire/livewire": "^4.1",
         "nativephp/mobile": "^4.7",
+        "nativephp/mobile-camera": "^1.1",
         "nativephp/mobile-ui": "^0.9.0"
     },
     "require-dev": {
@@ -47,13 +46,11 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
-            "@php artisan migrate --force",
-            "npm install",
-            "npm run build"
+            "@php artisan migrate --force"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'"
+            "@php artisan native:run"
         ],
         "lint": [
             "pint --parallel"
