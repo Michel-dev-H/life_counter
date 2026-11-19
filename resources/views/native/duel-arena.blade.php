@@ -150,14 +150,14 @@
             <native:row class="w-full gap-2 flex-wrap">
                 <native:button
                     label="Dados"
-                    icon="dice"
+                    icon="casino"
                     variant="secondary"
                     class="flex-1"
                     @navigate="'/duel/'.$duel->id.'/dice'"
                 />
                 <native:button
                     label="Moeda"
-                    icon="coin"
+                    icon="toll"
                     variant="secondary"
                     class="flex-1"
                     @navigate="'/duel/'.$duel->id.'/coin'"

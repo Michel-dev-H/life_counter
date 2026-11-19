@@ -332,6 +332,26 @@ Documentação de referência: <https://nativephp.com/docs/mobile/4> (mesma majo
 
 **Evidência (moto_g56_5G, 2026-11-17).** `app_storage/persisted_data/database/database.sqlite` com **0 bytes**; `laravel.log` do device com **63 ocorrências** de `SQLSTATE[HY000]: no such table: settings`, com a pilha em `Runtime::boot()` → `Application::bootProvider(App\Providers\NativeServiceProvider)` → `App\Appearance::theme()`; em seguida o fatal do Collision. O bundle instalado era o Build 2 (pré-limpeza, ainda com `app/Livewire`, `routes/web.php` e `public/build` dentro do zip).
 
-**Validação.** Reprodução local com SQLite vazio e `NATIVEPHP_RUNNING=true`: antes o `php artisan about` saía 1 no boot; depois `migrate --force` sai 0 e cria `settings`. Teste de regressão `keeps the boot alive when the settings table does not exist yet` em `AppearanceDomainTest` (falhou antes com o mesmo erro do device). Gate: 166 testes / 1058 assertions, phpstan 0, pint limpo, `native:validate` limpo.
+**Validação.** Reprodução local com SQLite vazio e `NATIVEPHP_RUNNING=true`: antes o `php artisan about` saía 1 no boot; depois `migrate --force` sai 0 e cria `settings`. Teste de regressão `keeps the boot alive when the settings table does not exist yet` em `AppearanceDomainTest` (falhou antes com o mesmo erro do device). Gate: 166 testes / 1058 assertions, phpstan 0, pint limpo, `native:validate` limpo (167/1059 depois da guarda de D28).
 
 **Pendente.** Build 3 (pós-limpeza + D27) e validação funcional no `moto_g56_5G`. Neste ambiente o `native:run` morre durante a cópia do bundle (antes de instalar), inclusive destacado do shell — o build precisa ser rodado em terminal próprio (`php artisan native:run android` ou `gradlew assembleDebug` + `adb install`). O banco de 0 bytes permanece no device e é exatamente o caminho que a correção desbloqueia no primeiro launch.
+
+## D28 — `native:list` nunca dentro de `native:scroll-view`
+
+**Contexto.** Na validação no aparelho (2026-11-17), quatro telas derrubavam o app ao abrir: Duelos Recentes, Lembretes, Moeda e Dados. O logcat registrava `java.lang.IllegalStateException: Vertically scrollable component was measured with an infinity maximum height constraints`: o Compose não aceita uma lista rolável dentro de um container com altura infinita.
+
+**Decisão.** Uma lista nunca fica dentro de `scroll-view`. A tela é uma `native:column class="w-full h-full"` com o conteúdo fixo e `<native:list class="w-full flex-1">` como filho direto — o `flex-1` fornece a altura limitada que o Compose exige. Conteúdo rolável que não é lista continua em `scroll-view`.
+
+**Motivo de virar regra.** O erro só aparece em runtime, no device; nem teste de unidade nem `native:validate` o detectam, e um `scroll-view` em volta parece inofensivo em revisão.
+
+**Guarda.** `tests/Feature/NativeListLayoutTest.php` varre as views e falha se `native:list` aparecer dentro de `native:scroll-view`. Gate após a correção: 167 testes / 1059 assertions.
+
+## D29 — `docs/pendencias/` como fonte de continuidade
+
+**Contexto.** O backlog original (`docs/tarefas/001–034`) descreve a stack Laravel/Livewire + WebView, encerrada em D1. Depois da refatoração não havia um lugar por tela que dissesse o que existe, o que falta e o que já foi validado no aparelho.
+
+**Decisão.** Um arquivo por tela em `docs/pendencias/`, mais `chrome-e-modais.md` para o que é compartilhado e `README.md` como índice. Cada arquivo traz: contexto, estado atual com `arquivo:linha`, tabela de pendências com origem e critério de aceite, checklist de validação no aparelho, regras/skills por referência curta, arquivos a inspecionar e registro de execução. Status só em `Pendente`, `Implementado — não validado`, `Validado no aparelho` ou `Fora de escopo`; sem linha no registro de execução, a pendência continua pendente.
+
+**Série antiga.** `docs/tarefas/001–034` fica preservada como histórico, com banner no `README.md`, sem ser atualizada nem apagada. As decisões deste arquivo prevalecem sobre qualquer anotação antiga.
+
+**Regras.** `.ai/rules/nativephp-docs.md` foi reescrito para o EDGE atual e mapeado no `.ai/rules/index.md`, incluindo a tabela de "histórico superado — não seguir".

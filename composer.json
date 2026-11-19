@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/blank-livewire-starter-kit",
+    "name": "duel-companion/app",
     "type": "project",
-    "description": "The official Laravel starter kit for Livewire.",
+    "description": "Duel Companion — contador de vida e ferramentas de duelo para Yu-Gi-Oh!, em NativePHP Mobile (EDGE).",
     "keywords": [
         "laravel",
         "framework"

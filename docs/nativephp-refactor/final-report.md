@@ -115,3 +115,35 @@ Cobertura 1:1 migrada antes da remoção do legado: `DuelSetupDomainTest` (14) +
 | Contadores & Campo | módulo nunca implementado (mock quebrado) | fora de escopo (D4), registrado como pendência de produto |
 
 **Commit/push:** não executados, conforme instrução do usuário.
+
+## 11. Atualização pós-relatório (2026-11-19)
+
+Este relatório foi escrito em 2026-11-17 07:33, antes das correções abaixo. O corpo acima fica como registro; esta seção é o estado vigente.
+
+**Correções posteriores ao relatório**
+
+- **Crash de boot (D27).** `Appearance::applyNativeTheme()` captura `Throwable` e mantém a paleta de `config/native-ui.php` quando `settings` ainda não existe. A falha acontecia antes do `migrate` e deixava o app na tela de loading. Regressão coberta em `AppearanceDomainTest`.
+- **Crash de listas no Compose.** `native:list` dentro de `native:scroll-view` lançava `IllegalStateException: Vertically scrollable component was measured with an infinity maximum height constraints`. Corrigido em `recent-duels`, `reminders`, `coin-tools` e `dice-tools`; guarda em `tests/Feature/NativeListLayoutTest.php` (D28).
+- **Gate atual:** 167 testes / 1059 assertions (o relatório registrou 165/1057), phpstan 0, pint limpo, `native:validate` limpo.
+- **Commit.** A árvore foi commitada pelo usuário em `37a073d` (“refactor for mobile system”); a afirmação de “não commitado” no topo vale só para 2026-11-17.
+
+**Documentação**
+
+- Criado `docs/pendencias/` — um arquivo por tela mais `chrome-e-modais.md` — como fonte de continuidade, com pendências, critérios de aceite, checklist de aparelho e registro de execução. A série `docs/tarefas/001–034` fica preservada como histórico (D29).
+- `.ai/rules/nativephp-docs.md` foi reescrito para o EDGE atual (antes descrevia Livewire/WebView, runtime `classic` e `pt-safe`) e passou a ser mapeado no `.ai/rules/index.md`.
+- Padrão oficial de chrome: `Route::nativeGroup(TabsLayout::class, …)` para abas e `Route::nativeGroup(StackLayout::class, …)` para telas empilhadas — `->layout()` por rota não é mais o padrão.
+- `Theme::browserColor()` (resíduo de WebView) removido (AP-9).
+
+**Empacotamento — premissa corrigida**
+
+- O bundle **debug** inclui dependências de dev **por design**: `RunsAndroid.php:135` usa `--no-dev` só quando o build não é `debug`. Medir tamanho no debug não representa a distribuição.
+- Validação de empacotamento deve usar `php artisan native:run android --build=profileable` (instala no device e aplica `--no-dev`) ou `native:package` para release.
+- `config/nativephp.php` passou a excluir do bundle `docs`, `.agents`, `.ai`, `public/wallpapers`, `database/factories` e `database/seeders`, e a limpar `NATIVEPHP_ANDROID_SDK_LOCATION`, `VITE_APP_NAME` e `APP_FAKER_LOCALE` do `.env` embarcado.
+- `resources/fonts` e `vendor/nativephp/mobile-ui/resources` continuam no bundle até a medição com `profileable` confirmar que são build-time.
+- `composer.json` renomeado e skills `livewire-development`/`blaze-optimize` removidas de `.agents/skills` e `.github/skills`.
+
+**Ainda pendente**
+
+- Build no aparelho e validação funcional das 8 telas (G-1), incluindo `adb logcat` sem `Vertically scrollable component`.
+- iOS (G-5) e `APP_ENV=production`/`APP_DEBUG=false` + `minify_enabled`/`shrink_resources` para distribuição (G-4).
+- Retenção/histórico unificado e demais lacunas por tela: ver `docs/pendencias/`.

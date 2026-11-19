@@ -27,18 +27,6 @@ enum Theme: string
     }
 
     /**
-     * Surface color used by the browser chrome around the WebView.
-     */
-    public function browserColor(): string
-    {
-        return match ($this) {
-            self::Holographic => '#0f131d',
-            self::ShadowRealm => '#0b0713',
-            self::MinimalArena => '#f7f7f4',
-        };
-    }
-
-    /**
      * Palette applied to the native UI (nativephp/mobile-ui theme tokens).
      *
      * Each theme has a fixed appearance mode, so the same palette is used for

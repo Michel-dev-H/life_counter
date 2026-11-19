@@ -20,7 +20,37 @@ it('rolls the requested number of dice and records the roll', function () {
         ->and($roll->results)->toHaveCount(3)
         ->and($roll->total)->toBe(array_sum($roll->results));
 
-    $screen->assertSee((string) $roll->total);
+    $this->travel(1)->seconds();
+
+    $screen->firePolls()
+        ->assertSee(implode(' · ', $roll->results))
+        ->assertElement('text', fn (array $node) => ($node['props']['text'] ?? null) === (string) $roll->total);
+});
+
+it('tumbles the dice before showing the recorded results', function () {
+    $duel = Duel::startWith([['name' => 'Ana']]);
+
+    $screen = Native::visit('/duel/'.$duel->id.'/dice')
+        ->set('diceCount', '3')
+        ->tap('Lançar');
+
+    $roll = $duel->diceRolls()->sole();
+
+    expect($screen->get('rollingStartedAt'))->toBeGreaterThan(0)
+        ->and($screen->get('rollingDiceCount'))->toBe(3);
+
+    $screen->assertMissingElement('text', fn (array $node) => ($node['props']['text'] ?? null) === (string) $roll->total);
+});
+
+it('renders one die face per rolled die', function () {
+    $duel = Duel::startWith([['name' => 'Ana']]);
+
+    $screen = Native::visit('/duel/'.$duel->id.'/dice')
+        ->set('diceCount', '10')
+        ->tap('Lançar');
+
+    $screen->assertElement('stack', fn (array $node) => str_starts_with($node['props']['a11y_label'] ?? '', 'Dado 10: '))
+        ->assertMissingElement('stack', fn (array $node) => str_starts_with($node['props']['a11y_label'] ?? '', 'Dado 11: '));
 });
 
 it('clamps the dice count to the supported range', function () {
@@ -49,8 +79,19 @@ it('flips a coin and shows the result and the totals', function () {
 
     $flip = $duel->coinFlips()->sole();
 
-    $screen->assertSee($flip->result === 'heads' ? 'Cara' : 'Coroa')
+    $this->travel(1)->seconds();
+
+    $screen->firePolls()
+        ->assertElement('stack', fn (array $node) => ($node['props']['a11y_label'] ?? '') === 'Resultado da moeda: '.($flip->result === 'heads' ? 'Cara' : 'Coroa'))
         ->assertSee('Total: 1');
+});
+
+it('spins the coin before settling on the recorded face', function () {
+    $duel = Duel::startWith([['name' => 'Ana']]);
+
+    $screen = Native::visit('/duel/'.$duel->id.'/coin')->tap('Lançar');
+
+    expect($screen->get('flippingStartedAt'))->toBeGreaterThan(0);
 });
 
 it('lists the coin flip history', function () {

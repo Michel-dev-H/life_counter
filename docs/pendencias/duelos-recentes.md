@@ -1,7 +1,7 @@
 # Duelos Recentes
 
 **Rota:** `/duels` · **Componente:** `App\NativeComponents\RecentDuels` · **View:** `resources/views/native/recent-duels.blade.php`
-**Layout:** `App\Layouts\StackLayout`
+**Layout:** `App\Layouts\StackLayout` (grupo `nativeGroup`)
 **Design Stitch:** **nenhum**
 **Tarefas antigas absorvidas:** 020, 021, 030
 **Cobertura atual:** `tests/Feature/RecentDuelsTest.php`, `tests/Feature/NativeListLayoutTest.php` (guarda de layout)
@@ -44,7 +44,7 @@ Lista os duelos mais recentes para retomada rápida (030), substituindo a query 
 - `.ai/rules/tests.md` — cenário novo de retomada/exclusão exige teste.
 - `.ai/rules/nativephp-docs.md` — **regra de lista**: `native:list` nunca dentro de `native:scroll-view`.
 
-Decisões: D11, D17, D27. Ver `docs/nativephp-refactor/decisions.md`.
+Decisões: D11, D17, D27, D28. Ver `docs/nativephp-refactor/decisions.md`.
 
 ## 6. Skills
 

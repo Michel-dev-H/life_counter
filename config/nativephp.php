@@ -278,6 +278,9 @@ return [
         '*_SECRET',
         'DB_PASSWORD',
         'DB_USERNAME',
+        'APP_FAKER_LOCALE',
+        'VITE_APP_NAME',
+        'NATIVEPHP_ANDROID_SDK_LOCATION',
     ],
 
     /*
@@ -296,6 +299,12 @@ return [
         'storage/framework/cache',
         'storage/framework/testing',
         'storage/logs/laravel.log',
+        'docs',
+        '.agents',
+        '.ai',
+        'public/wallpapers',
+        'database/factories',
+        'database/seeders',
     ],
 
     /*

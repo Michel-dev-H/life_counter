@@ -1,6 +1,9 @@
 # Implementation Summary - AppearanceTest Fixes
 ## Yu-Gi-Oh! TCG Duel Companion App
 
+> **Histórico.** Resumo da era Livewire/WebView, removido em 2026-11-17. Cita `app/Models/Appearance.php` e views Livewire que não existem mais.
+> Estado atual: [`docs/pendencias/README.md`](./pendencias/README.md) e [`.ai/rules/nativephp-docs.md`](../.ai/rules/nativephp-docs.md).
+
 ## Overview
 Fixed AppearanceTest.php failures to make all 10 tests pass, implementing theme selection, wallpaper upload, and seat accent tokens.
 

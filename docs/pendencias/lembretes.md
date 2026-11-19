@@ -15,7 +15,7 @@ Lembretes de efeito da partida (017): criar, marcar como concluído e excluir, c
 
 - Regras e mensagens no componente (`app/NativeComponents/Reminders.php:37-61`): nome obrigatório até 120, turno inteiro, fase válida.
 - Formulário em `native:modal` com Nome, Descrição, "Gatilho por turno" (teclado numérico) e chips de fase (`resources/views/native/reminders.blade.php:24-80`).
-- Turno e fase são **opcionais e independentes**: preencher os dois exige que ambos casem (`Duel.php:361-380`).
+- Turno e fase são **opcionais e independentes**: preencher os dois exige que ambos casem (`Duel.php:377-389`).
 - Lista ordenada por `completed` e `created_at`, com checkbox (`on-leading-change`) e ícone de lixeira (`on-trailing-press`) (`Reminders.php:120-129`; view `:7-21`).
 - Destaque usa `trailingBadges` com ícone `flag` (`view:15`).
 - `Reminder` já tem as colunas `duel_player_id`, `duration_turns` e `removal_condition` no `$fillable` (`app/Models/Reminder.php:15-25`), mas **nenhuma delas é usada** pelo formulário.
@@ -55,7 +55,7 @@ Lembretes de efeito da partida (017): criar, marcar como concluído e excluir, c
 - `.ai/rules/tests.md` — branch novo (edição, duração, confirmação) exige teste antes.
 - `.ai/rules/nativephp-docs.md` — **regra de lista** e padrão de `native:modal`.
 
-Decisões: D5, D17, D21, D27. Ver `docs/nativephp-refactor/decisions.md`.
+Decisões: D5, D17, D21, D27, D28. Ver `docs/nativephp-refactor/decisions.md`.
 
 ## 6. Skills
 

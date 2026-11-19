@@ -49,7 +49,7 @@ Sorteio de cara ou coroa dentro da partida (013): lançar, ver o último resulta
 - `.ai/rules/tests.md` — branch novo exige teste antes.
 - `.ai/rules/nativephp-docs.md` — **regra de lista**: `native:list` nunca dentro de `native:scroll-view`.
 
-Decisões: D5, D17, D21, D27. Ver `docs/nativephp-refactor/decisions.md`.
+Decisões: D5, D17, D21, D27, D28. Ver `docs/nativephp-refactor/decisions.md`.
 
 ## 6. Skills
 
@@ -72,3 +72,4 @@ Decisões: D5, D17, D21, D27. Ver `docs/nativephp-refactor/decisions.md`.
 |---|---|---|---|---|
 | 2026-11-17 | auditoria | Arquivo criado a partir do código atual e da tarefa 013 | leitura de código | 7 pendências abertas |
 | 2026-11-17 | correção | `native:list` retirado de dentro do `scroll-view` (crash de altura infinita no Compose) | `php artisan test --compact tests/Feature/NativeListLayoutTest.php` | verde; validação no device pendente |
+| 2026-11-19 | implementação | Animação nativa 2D da moeda (círculo girando com `rotate` e `native:poll` de 90 ms por ~600 ms, face com `content-transition`); resultado continua vindo de `Duel::flipCoin()` | `php artisan test --compact`, `php artisan native:validate`, `vendor/bin/phpstan analyse` | verde; validação no device pendente |

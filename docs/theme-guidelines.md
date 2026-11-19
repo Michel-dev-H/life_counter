@@ -1,5 +1,8 @@
 # Duel Companion — Theme & Wallpaper Guidelines
 
+> **Histórico.** Este arquivo descreve o stack Livewire/WebView (CSS, `data-theme`, `theme-color`), removido em 2026-11-17.
+> Estado atual: [`docs/pendencias/README.md`](./pendencias/README.md), [`aparencia.md`](./pendencias/aparencia.md) e [`.ai/rules/nativephp-docs.md`](../.ai/rules/nativephp-docs.md).
+
 ## Overview
 This app supports three visual themes that users can switch between at runtime. Components render based on a `data-theme` attribute on the `<body>` element. The browser's `theme-color` metadata follows the selected theme. A theme-colored scrim is intended to improve readability over custom wallpapers; its contrast still requires the validation tracked in [task 027](./tarefas/027-contraste-e-scrim-do-papel-de-parede.md).
 

@@ -515,4 +515,9 @@ class DuelArena extends NativeComponent
             $this->addError('hapticFeedback', 'Vibração indisponível neste ambiente; a preferência foi desativada.');
         }
     }
+    
+    public function finishDuel(): void
+    {
+         $this->duel->finishDuel();    
+    }
 }

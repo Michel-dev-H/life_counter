@@ -1,6 +1,9 @@
 # AppearanceTest Status and Next Steps
 ## Yu-Gi-Oh! TCG Duel Companion App
 
+> **Histórico.** Relatório de testes da era Livewire/WebView, removido em 2026-11-17. Cita `App\Livewire\*` e `resources/views/livewire/*`, que não existem mais.
+> Estado atual: [`docs/pendencias/README.md`](./pendencias/README.md) e [`.ai/rules/nativephp-docs.md`](../.ai/rules/nativephp-docs.md).
+
 ## Current Test Results (9/10 passing)
 
 ### ✅ Passing Tests (9/10)

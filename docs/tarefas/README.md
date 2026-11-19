@@ -1,5 +1,8 @@
 # Backlog de funcionalidades
 
+> **Histórico.** A série `001–034` é o backlog da era Laravel/Livewire + WebView, encerrada em 2026-11-17. Os arquivos ficam preservados como registro e não devem ser seguidos.
+> Fonte atual: [`docs/pendencias/README.md`](../pendencias/README.md), [`docs/nativephp-refactor/decisions.md`](../nativephp-refactor/decisions.md) e [`.ai/rules/nativephp-docs.md`](../../.ai/rules/nativephp-docs.md).
+
 Este diretório transforma o prompt do companion de Yu-Gi-Oh! em tarefas verificáveis para o projeto Laravel/Livewire existente, com empacotamento Android planejado via NativePHP.
 
 ## Decisões de escopo

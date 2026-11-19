@@ -46,7 +46,7 @@ Rolagem de dados dentro do duelo (012): escolher quantidade, lançar, ver o tota
 - `.ai/rules/tests.md` — branch novo exige teste antes.
 - `.ai/rules/nativephp-docs.md` — **regra de lista**: `native:list` nunca dentro de `native:scroll-view`.
 
-Decisões: D5, D17, D21, D27. Ver `docs/nativephp-refactor/decisions.md`.
+Decisões: D5, D17, D21, D27, D28. Ver `docs/nativephp-refactor/decisions.md`.
 
 ## 6. Skills
 
@@ -69,3 +69,4 @@ Decisões: D5, D17, D21, D27. Ver `docs/nativephp-refactor/decisions.md`.
 |---|---|---|---|---|
 | 2026-11-17 | auditoria | Arquivo criado a partir do código atual e da tarefa 012 | leitura de código | 5 pendências abertas |
 | 2026-11-17 | correção | `native:list` retirado de dentro do `scroll-view` (crash de altura infinita) | `php artisan test --compact tests/Feature/NativeListLayoutTest.php` | verde; validação no device pendente |
+| 2026-11-19 | implementação | Animação nativa 2D dos dados (pips com `rect`/`circle`, `rotate`/`scale` e `native:poll` de 90 ms por ~600 ms); resultado continua vindo de `Duel::rollDice()` | `php artisan test --compact`, `php artisan native:validate`, `vendor/bin/phpstan analyse` | verde; validação no device pendente |

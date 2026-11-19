@@ -36,8 +36,10 @@ Route::nativeGroup(TabsLayout::class, function () {
 
 // Pushed screens: registered outside the tab group, so the chrome swaps
 // from tabs to a navigation stack.
-Route::native('/duels', RecentDuels::class)->name('duels');
-Route::native('/duel/{duel}', DuelArena::class)->name('duel.arena')->layout(StackLayout::class);
-Route::native('/duel/{duel}/dice', DiceTools::class)->name('duel.dice')->layout(StackLayout::class);
-Route::native('/duel/{duel}/coin', CoinTools::class)->name('duel.coin')->layout(StackLayout::class);
-Route::native('/duel/{duel}/reminders', Reminders::class)->name('duel.reminders')->layout(StackLayout::class);
+Route::nativeGroup(StackLayout::class, function () {
+    Route::native('/duel/{duel}', DuelArena::class)->name('duel.arena');
+    Route::native('/duel/{duel}/dice', DiceTools::class)->name('duel.dice');
+    Route::native('/duel/{duel}/coin', CoinTools::class)->name('duel.coin');
+    Route::native('/duel/{duel}/reminders', Reminders::class)->name('duel.reminders');
+    Route::native('/duels', RecentDuels::class)->name('duels');
+});

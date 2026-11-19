@@ -1,6 +1,9 @@
 # Changes by Development Sector
 ## AppearanceTest Fixes - Yu-Gi-Oh! TCG Duel Companion
 
+> **Histórico.** Registro da era Livewire/WebView, removido em 2026-11-17. Cita `routes/web.php`, `App\Livewire\*` e views Livewire que não existem mais.
+> Estado atual: [`docs/pendencias/README.md`](./pendencias/README.md) e [`.ai/rules/nativephp-docs.md`](../.ai/rules/nativephp-docs.md).
+
 ## 📁 Sector 1: Routes and Configuration
 
 ### `routes/web.php`
